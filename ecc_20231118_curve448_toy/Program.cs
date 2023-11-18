@@ -4,7 +4,8 @@
 	{
 		static void Main(string[] args)
 		{
-			Console.WriteLine("Hello, World!");
+			QNumberBigInteger qb = new (1);
+			Console.WriteLine(qb.ToString());
 		}
 	}
 }
