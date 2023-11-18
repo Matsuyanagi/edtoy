@@ -2,7 +2,7 @@
 
 namespace ecc_20231118_curve448_toy
 {
-	internal class QNumberBigInteger : QNumber<BigInteger>
+	public class QNumberBigInteger : QNumber<BigInteger>
 	{
 
 		public QNumberBigInteger(Int32 x)
