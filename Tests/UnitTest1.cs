@@ -56,5 +56,48 @@ namespace Tests
 			Assert.That(q_minus1 <= q_plus1, Is.True);
 			Assert.That(q_plus1 >= q_minus1, Is.True);
 		}
+		[Test]
+		public void TestSimpleArithmeticPlusMinus()
+		{
+			QNumberBigInteger q_0 = QNumberBigInteger.Zero;
+			QNumberBigInteger q_minus1 = new QNumberBigInteger(-1);
+			QNumberBigInteger q_plus1 = new QNumberBigInteger(1);
+
+			// 二項演算 + -
+			Assert.That(q_plus1 + q_plus1, Is.EqualTo(new QNumberBigInteger(2)));
+			Assert.That(q_plus1 + q_minus1, Is.EqualTo(q_0));
+
+			Assert.That(q_plus1 - q_plus1, Is.EqualTo(q_0));
+			Assert.That(q_plus1 - q_minus1, Is.EqualTo(new QNumberBigInteger(2)));
+
+			// 単項 + -
+			Assert.That(+q_plus1, Is.EqualTo(q_plus1));
+			Assert.That(+q_0, Is.EqualTo(q_0));
+			Assert.That(+q_minus1, Is.EqualTo(q_minus1));
+
+			Assert.That(-q_plus1, Is.EqualTo(q_minus1));
+			Assert.That(-q_0, Is.EqualTo(q_0));
+			Assert.That(-q_minus1, Is.EqualTo(q_plus1));
+
+			// ++ -- 前置、後置で返り値が変わる
+			var q1 = new QNumberBigInteger(1);
+			var q0 = new QNumberBigInteger(0);
+			var qm0 = new QNumberBigInteger(-1);
+			Assert.That(++q1, Is.EqualTo(new QNumberBigInteger(2)));
+			q1 = new QNumberBigInteger(1);
+			Assert.That(q1++, Is.EqualTo(new QNumberBigInteger(1)));
+			Assert.That(q1, Is.EqualTo(new QNumberBigInteger(2)));
+
+			Assert.That(++q0, Is.EqualTo(new QNumberBigInteger(1)));
+			q0 = new QNumberBigInteger(0);
+			Assert.That(q0++, Is.EqualTo(new QNumberBigInteger(0)));
+			Assert.That(q0, Is.EqualTo(new QNumberBigInteger(1)));
+
+			Assert.That(++qm0, Is.EqualTo(new QNumberBigInteger(0)));
+			qm0 = new QNumberBigInteger(-1);
+			Assert.That(qm0++, Is.EqualTo(new QNumberBigInteger(-1)));
+			Assert.That(qm0, Is.EqualTo(new QNumberBigInteger(0)));
+		}
+
 	}
 }

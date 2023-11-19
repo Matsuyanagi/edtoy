@@ -281,9 +281,9 @@ namespace ecc_20231118_curve448_toy
 			throw new NotImplementedException();
 		}
 
-		public int CompareTo( QNumberBigInteger x )
+		public int CompareTo(QNumberBigInteger x)
 		{
-			return innerValue.CompareTo( x.innerValue );
+			return innerValue.CompareTo(x.innerValue);
 		}
 
 		public int CompareTo(object? obj)
@@ -297,12 +297,12 @@ namespace ecc_20231118_curve448_toy
 			{
 				return false;
 			}
-			return innerValue.Equals(((QNumberBigInteger)obj).innerValue );
+			return innerValue.Equals(((QNumberBigInteger)obj).innerValue);
 		}
 
 		public bool Equals(QNumberBigInteger other)
 		{
-			return innerValue.Equals( other.innerValue );
+			return innerValue.Equals(other.innerValue);
 		}
 
 		public int GetByteCount()
@@ -342,7 +342,7 @@ namespace ecc_20231118_curve448_toy
 
 		public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
 		{
-			throw new NotImplementedException();
+			return innerValue.TryFormat(destination, out charsWritten, format, provider);
 		}
 
 		public bool TryWriteBigEndian(Span<byte> destination, out int bytesWritten)
@@ -357,22 +357,22 @@ namespace ecc_20231118_curve448_toy
 
 		public static QNumberBigInteger operator +(QNumberBigInteger value)
 		{
-			throw new NotImplementedException();
+			return new QNumberBigInteger(value.innerValue);
 		}
 
 		public static QNumberBigInteger operator +(QNumberBigInteger left, QNumberBigInteger right)
 		{
-			throw new NotImplementedException();
+			return new QNumberBigInteger(left.innerValue + right.innerValue);
 		}
 
 		public static QNumberBigInteger operator -(QNumberBigInteger value)
 		{
-			throw new NotImplementedException();
+			return new QNumberBigInteger(-value.innerValue);
 		}
 
 		public static QNumberBigInteger operator -(QNumberBigInteger left, QNumberBigInteger right)
 		{
-			throw new NotImplementedException();
+			return new QNumberBigInteger(left.innerValue - right.innerValue);
 		}
 
 		public static QNumberBigInteger operator ~(QNumberBigInteger value)
@@ -382,7 +382,7 @@ namespace ecc_20231118_curve448_toy
 
 		public static QNumberBigInteger operator ++(QNumberBigInteger value)
 		{
-			throw new NotImplementedException();
+			return new QNumberBigInteger(++value.innerValue);
 		}
 
 		public static QNumberBigInteger operator --(QNumberBigInteger value)
