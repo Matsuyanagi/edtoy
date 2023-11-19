@@ -8,12 +8,20 @@ namespace ecc_20231118_curve448_toy
 	{
 		BigInteger innerValue = BigInteger.Zero;
 
-		private static QNumberBigInteger _zero = new QNumberBigInteger(0);
-		private static QNumberBigInteger _one = new QNumberBigInteger(1);
+		private static readonly QNumberBigInteger _zero = new QNumberBigInteger(0);
+		private static readonly QNumberBigInteger _one = new QNumberBigInteger(1);
+		private static readonly QNumberBigInteger _minus_one = new QNumberBigInteger(-1);
 
 		public static QNumberBigInteger Zero => _zero;
 
 		public static QNumberBigInteger One => _one;
+
+		public static QNumberBigInteger MinusOne => _minus_one;
+
+		public QNumberBigInteger(QNumberBigInteger x)
+		{
+			innerValue = x.innerValue;
+		}
 
 		public QNumberBigInteger(Int32 x)
 		{
@@ -67,9 +75,9 @@ namespace ecc_20231118_curve448_toy
 
 		public static int Radix => throw new NotImplementedException();
 
-		public static QNumberBigInteger AdditiveIdentity => throw new NotImplementedException();
+		public static QNumberBigInteger AdditiveIdentity => new QNumberBigInteger(Zero);
 
-		public static QNumberBigInteger MultiplicativeIdentity => throw new NotImplementedException();
+		public static QNumberBigInteger MultiplicativeIdentity => new QNumberBigInteger(One);
 
 		public static QNumberBigInteger Abs(QNumberBigInteger value)
 		{
@@ -83,13 +91,20 @@ namespace ecc_20231118_curve448_toy
 
 		public static bool IsComplexNumber(QNumberBigInteger value)
 		{
-			throw new NotImplementedException();
+			return false;
 		}
 
 		public static bool IsEvenInteger(QNumberBigInteger value)
 		{
-			throw new NotImplementedException();
+			return value.innerValue.IsEven;
 		}
+
+		public bool IsEven => innerValue.IsEven;
+		public bool IsOne => innerValue.IsOne;
+		public bool IsPowerOfTwo => innerValue.IsPowerOfTwo;
+		// public bool IsZero => innerValue.IsZero;
+		public int Sign => innerValue.Sign;
+
 
 		public static bool IsFinite(QNumberBigInteger value)
 		{
@@ -118,7 +133,7 @@ namespace ecc_20231118_curve448_toy
 
 		public static bool IsNegative(QNumberBigInteger value)
 		{
-			throw new NotImplementedException();
+			return BigInteger.IsNegative( value.innerValue );
 		}
 
 		public static bool IsNegativeInfinity(QNumberBigInteger value)
@@ -163,7 +178,7 @@ namespace ecc_20231118_curve448_toy
 
 		public static bool IsZero(QNumberBigInteger value)
 		{
-			throw new NotImplementedException();
+			return value.innerValue.IsZero;
 		}
 
 		public static QNumberBigInteger Log2(QNumberBigInteger value)

@@ -30,6 +30,9 @@ namespace Tests
 			qn = QNumberBigInteger.One;
 			Assert.That(qn.ToString(), Is.EqualTo("1"));
 			Assert.That(qn, Is.EqualTo(new QNumberBigInteger(1)));
+			qn = QNumberBigInteger.MinusOne;
+			Assert.That(qn.ToString(), Is.EqualTo("-1"));
+			Assert.That(qn, Is.EqualTo(new QNumberBigInteger(-1)));
 		}
 		[Test]
 		public void TestLessAndGreater()
@@ -201,6 +204,50 @@ namespace Tests
 			Assert.That(q_plus255 >>> 10, Is.EqualTo(new QNumberBigInteger(255>>>10)));
 			Assert.That(q_minus1 >>> 0, Is.EqualTo(new QNumberBigInteger(-1)));
 		}
+
+		[Test]
+		public void TestSimpleArithmeticOther()
+		{
+			Assert.That(QNumberBigInteger.AdditiveIdentity, Is.EqualTo(new QNumberBigInteger(0)));
+			Assert.That(QNumberBigInteger.MultiplicativeIdentity, Is.EqualTo(new QNumberBigInteger(1)));
+			Assert.That(QNumberBigInteger.IsNegative(new QNumberBigInteger(0)), Is.EqualTo(false));
+			Assert.That(QNumberBigInteger.IsNegative(new QNumberBigInteger(-1)), Is.EqualTo(true));
+			Assert.That(QNumberBigInteger.IsNegative(new QNumberBigInteger(1)), Is.EqualTo(false));
+
+			Assert.That(QNumberBigInteger.IsComplexNumber(new QNumberBigInteger(1)), Is.EqualTo(false));
+
+			Assert.That(QNumberBigInteger.IsEvenInteger(new QNumberBigInteger(0)), Is.EqualTo(true));
+			Assert.That(QNumberBigInteger.IsEvenInteger(new QNumberBigInteger(1)), Is.EqualTo(false));
+			Assert.That(QNumberBigInteger.IsEvenInteger(new QNumberBigInteger(2)), Is.EqualTo(true));
+
+			Assert.That((new QNumberBigInteger(0)).IsPowerOfTwo, Is.EqualTo(false));
+			Assert.That((new QNumberBigInteger(1)).IsPowerOfTwo, Is.EqualTo(true));
+			Assert.That((new QNumberBigInteger(2)).IsPowerOfTwo, Is.EqualTo(true));
+			Assert.That((new QNumberBigInteger(3)).IsPowerOfTwo, Is.EqualTo(false));
+			Assert.That((new QNumberBigInteger(100)).IsPowerOfTwo, Is.EqualTo(false));
+			Assert.That((new QNumberBigInteger(127)).IsPowerOfTwo, Is.EqualTo(false));
+			Assert.That((new QNumberBigInteger(128)).IsPowerOfTwo, Is.EqualTo(true));
+
+			Assert.That((new QNumberBigInteger(0)).IsEven, Is.EqualTo(true));
+			Assert.That((new QNumberBigInteger(1)).IsEven, Is.EqualTo(false));
+			Assert.That((new QNumberBigInteger(2)).IsEven, Is.EqualTo(true));
+			Assert.That((new QNumberBigInteger(3)).IsEven, Is.EqualTo(false));
+			Assert.That((new QNumberBigInteger(127)).IsEven, Is.EqualTo(false));
+			Assert.That((new QNumberBigInteger(128)).IsEven, Is.EqualTo(true));
+
+			Assert.That((new QNumberBigInteger(-1)).IsOne, Is.EqualTo(false));
+			Assert.That((new QNumberBigInteger(0)).IsOne, Is.EqualTo(false));
+			Assert.That((new QNumberBigInteger(1)).IsOne, Is.EqualTo(true));
+			Assert.That((new QNumberBigInteger(2)).IsOne, Is.EqualTo(false));
+
+			Assert.That((new QNumberBigInteger(0)).Sign, Is.EqualTo(0));
+			Assert.That((new QNumberBigInteger(1)).Sign, Is.EqualTo(1));
+			Assert.That((new QNumberBigInteger(2)).Sign, Is.EqualTo(1));
+			Assert.That((new QNumberBigInteger(-1)).Sign, Is.EqualTo(-1));
+			Assert.That((new QNumberBigInteger(-100)).Sign, Is.EqualTo(-1));
+
+		}
+
 
 	}
 }
