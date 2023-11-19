@@ -432,32 +432,32 @@ namespace ecc_20231118_curve448_toy
 
 		public static bool operator ==(QNumberBigInteger left, QNumberBigInteger right)
 		{
-			throw new NotImplementedException();
+			return left.innerValue == right.innerValue;
 		}
 
 		public static bool operator !=(QNumberBigInteger left, QNumberBigInteger right)
 		{
-			throw new NotImplementedException();
+			return left.innerValue != right.innerValue;
 		}
 
 		public static bool operator <(QNumberBigInteger left, QNumberBigInteger right)
 		{
-			throw new NotImplementedException();
+			return left.innerValue < right.innerValue;
 		}
 
 		public static bool operator >(QNumberBigInteger left, QNumberBigInteger right)
 		{
-			throw new NotImplementedException();
+			return left.innerValue > right.innerValue;
 		}
 
 		public static bool operator <=(QNumberBigInteger left, QNumberBigInteger right)
 		{
-			throw new NotImplementedException();
+			return left.innerValue <= right.innerValue;
 		}
 
 		public static bool operator >=(QNumberBigInteger left, QNumberBigInteger right)
 		{
-			throw new NotImplementedException();
+			return left.innerValue >= right.innerValue;
 		}
 
 		public static QNumberBigInteger operator >>>(QNumberBigInteger value, int shiftAmount)
