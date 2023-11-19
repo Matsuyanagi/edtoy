@@ -26,8 +26,10 @@ namespace Tests
 		{
 			QNumberBigInteger qn = QNumberBigInteger.Zero;
 			Assert.That(qn.ToString(), Is.EqualTo("0"));
+			Assert.That(qn, Is.EqualTo(new QNumberBigInteger(0)));
 			qn = QNumberBigInteger.One;
 			Assert.That(qn.ToString(), Is.EqualTo("1"));
+			Assert.That(qn, Is.EqualTo(new QNumberBigInteger(1)));
 		}
 	}
 }

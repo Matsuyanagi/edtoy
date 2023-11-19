@@ -302,7 +302,7 @@ namespace ecc_20231118_curve448_toy
 
 		public bool Equals(QNumberBigInteger other)
 		{
-			throw new NotImplementedException();
+			return innerValue.Equals( other.innerValue );
 		}
 
 		public int GetByteCount()
