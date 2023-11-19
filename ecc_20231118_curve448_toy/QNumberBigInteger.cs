@@ -392,17 +392,17 @@ namespace ecc_20231118_curve448_toy
 
 		public static QNumberBigInteger operator *(QNumberBigInteger left, QNumberBigInteger right)
 		{
-			throw new NotImplementedException();
+			return new QNumberBigInteger(left.innerValue * right.innerValue);
 		}
 
 		public static QNumberBigInteger operator /(QNumberBigInteger left, QNumberBigInteger right)
 		{
-			throw new NotImplementedException();
+			return new QNumberBigInteger(left.innerValue / right.innerValue);
 		}
 
 		public static QNumberBigInteger operator %(QNumberBigInteger left, QNumberBigInteger right)
 		{
-			throw new NotImplementedException();
+			return new QNumberBigInteger(left.innerValue % right.innerValue);
 		}
 
 		public static QNumberBigInteger operator &(QNumberBigInteger left, QNumberBigInteger right)

@@ -99,5 +99,49 @@ namespace Tests
 			Assert.That(qm0, Is.EqualTo(new QNumberBigInteger(0)));
 		}
 
+		[Test]
+		public void TestSimpleArithmeticMulDiv()
+		{
+			QNumberBigInteger q_0 = QNumberBigInteger.Zero;
+			QNumberBigInteger q_minus1 = new QNumberBigInteger(-1);
+			QNumberBigInteger q_plus1 = new QNumberBigInteger(1);
+			QNumberBigInteger q_plus2 = new QNumberBigInteger(2);
+			QNumberBigInteger q_plus3 = new QNumberBigInteger(3);
+			QNumberBigInteger q_plus100 = new QNumberBigInteger(100);
+
+			// * 二項乗算
+			Assert.That(q_plus1 * q_plus1, Is.EqualTo(new QNumberBigInteger(1)));
+			Assert.That(q_plus1 * q_0, Is.EqualTo(new QNumberBigInteger(0)));
+			Assert.That(q_plus2 * q_plus100, Is.EqualTo(new QNumberBigInteger(200)));
+			Assert.That(q_plus100 * q_plus2, Is.EqualTo(q_plus2 * q_plus100));
+			Assert.That(q_plus100 * q_0, Is.EqualTo(new QNumberBigInteger(0)));
+			Assert.That(q_plus100 * q_plus1, Is.EqualTo(new QNumberBigInteger(100)));
+			Assert.That(q_plus100 * q_minus1, Is.EqualTo(new QNumberBigInteger(-100)));
+			Assert.That(q_0 * q_minus1, Is.EqualTo(new QNumberBigInteger(0)));
+			Assert.That(q_minus1 * q_minus1, Is.EqualTo(new QNumberBigInteger(1)));
+
+			// / 二項除算
+			Assert.That(q_plus1 / q_plus1, Is.EqualTo(new QNumberBigInteger(1)));
+			Assert.That(q_plus100 / q_plus1, Is.EqualTo(new QNumberBigInteger(100)));
+			Assert.That(q_plus100 / q_plus100, Is.EqualTo(new QNumberBigInteger(1)));
+			Assert.That(q_plus1 / q_plus100, Is.EqualTo(new QNumberBigInteger(0)));
+			Assert.That(q_minus1 / q_minus1, Is.EqualTo(new QNumberBigInteger(1)));
+			Assert.That(q_0 / q_plus1, Is.EqualTo(new QNumberBigInteger(0)));
+			Assert.That(q_0 / q_minus1, Is.EqualTo(new QNumberBigInteger(0)));
+			Assert.That(q_plus100 / q_minus1, Is.EqualTo(new QNumberBigInteger(-100)));
+
+			// % 剰余算
+			Assert.That(q_plus1 % q_plus1, Is.EqualTo(new QNumberBigInteger(0)));
+			Assert.That(q_plus100 % q_plus2, Is.EqualTo(new QNumberBigInteger(0)));
+			Assert.That(q_plus100 % q_plus3, Is.EqualTo(new QNumberBigInteger(1)));
+			Assert.That(q_0 % q_plus3, Is.EqualTo(new QNumberBigInteger(0)));
+			Assert.That(q_0 % q_plus1, Is.EqualTo(new QNumberBigInteger(0)));
+			Assert.That(q_0 % q_minus1, Is.EqualTo(new QNumberBigInteger(0)));
+			Assert.That(q_plus100 % q_minus1, Is.EqualTo(new QNumberBigInteger(0)));
+			Assert.That(q_plus100 % (q_minus1 * q_plus3 ), Is.EqualTo(new QNumberBigInteger(1)));
+			Assert.That((q_plus100 * q_minus1) % q_plus3, Is.EqualTo(new QNumberBigInteger(-1)));
+		}
+
+
 	}
 }
