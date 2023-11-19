@@ -407,27 +407,27 @@ namespace ecc_20231118_curve448_toy
 
 		public static QNumberBigInteger operator &(QNumberBigInteger left, QNumberBigInteger right)
 		{
-			throw new NotImplementedException();
+			return new QNumberBigInteger(left.innerValue & right.innerValue);
 		}
 
 		public static QNumberBigInteger operator |(QNumberBigInteger left, QNumberBigInteger right)
 		{
-			throw new NotImplementedException();
+			return new QNumberBigInteger(left.innerValue | right.innerValue);
 		}
 
 		public static QNumberBigInteger operator ^(QNumberBigInteger left, QNumberBigInteger right)
 		{
-			throw new NotImplementedException();
+			return new QNumberBigInteger(left.innerValue ^ right.innerValue);
 		}
 
 		public static QNumberBigInteger operator <<(QNumberBigInteger value, int shiftAmount)
 		{
-			throw new NotImplementedException();
+			return new QNumberBigInteger(value.innerValue << shiftAmount);
 		}
 
 		public static QNumberBigInteger operator >>(QNumberBigInteger value, int shiftAmount)
 		{
-			throw new NotImplementedException();
+			return new QNumberBigInteger(value.innerValue >> shiftAmount);
 		}
 
 		public static bool operator ==(QNumberBigInteger left, QNumberBigInteger right)
@@ -462,7 +462,7 @@ namespace ecc_20231118_curve448_toy
 
 		public static QNumberBigInteger operator >>>(QNumberBigInteger value, int shiftAmount)
 		{
-			throw new NotImplementedException();
+			return new QNumberBigInteger(value.innerValue >>> shiftAmount);
 		}
 	}
 }

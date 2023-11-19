@@ -142,6 +142,65 @@ namespace Tests
 			Assert.That((q_plus100 * q_minus1) % q_plus3, Is.EqualTo(new QNumberBigInteger(-1)));
 		}
 
+		[Test]
+		public void TestSimpleArithmeticBitOp()
+		{
+			QNumberBigInteger q_0 = QNumberBigInteger.Zero;
+			QNumberBigInteger q_plus1 = new QNumberBigInteger(1);
+			QNumberBigInteger q_plus2 = new QNumberBigInteger(2);
+			QNumberBigInteger q_plus3 = new QNumberBigInteger(3);
+			QNumberBigInteger q_plus255 = new QNumberBigInteger(255);
+			QNumberBigInteger q_minus1 = new QNumberBigInteger(-1);
+
+			// 二項演算 &
+			Assert.That(q_0 & q_0, Is.EqualTo(new QNumberBigInteger(0)));
+			Assert.That(q_0 & q_plus1, Is.EqualTo(new QNumberBigInteger(0)));
+			Assert.That(q_plus1 & q_plus1, Is.EqualTo(new QNumberBigInteger(1)));
+			Assert.That(q_plus1 & q_plus2, Is.EqualTo(new QNumberBigInteger(0)));
+			Assert.That(q_plus2 & q_plus2, Is.EqualTo(new QNumberBigInteger(2)));
+			Assert.That(q_plus2 & q_plus3, Is.EqualTo(new QNumberBigInteger(2)));
+			Assert.That(q_plus255 & q_plus3, Is.EqualTo(new QNumberBigInteger(3)));
+			
+			// 二項演算 |
+			Assert.That(q_0 | q_0, Is.EqualTo(new QNumberBigInteger(0)));
+			Assert.That(q_0 | q_plus1, Is.EqualTo(new QNumberBigInteger(1)));
+			Assert.That(q_plus1 | q_plus1, Is.EqualTo(new QNumberBigInteger(1)));
+			Assert.That(q_plus1 | q_plus2, Is.EqualTo(new QNumberBigInteger(3)));
+			Assert.That(q_plus2 | q_plus2, Is.EqualTo(new QNumberBigInteger(2)));
+			Assert.That(q_plus2 | q_plus3, Is.EqualTo(new QNumberBigInteger(3)));
+			Assert.That(q_plus255 | q_plus3, Is.EqualTo(new QNumberBigInteger(255)));
+			
+			// 二項演算 ^
+			Assert.That(q_0 ^ q_0, Is.EqualTo(new QNumberBigInteger(0)));
+			Assert.That(q_0 ^ q_plus1, Is.EqualTo(new QNumberBigInteger(1)));
+			Assert.That(q_plus1 ^ q_plus1, Is.EqualTo(new QNumberBigInteger(0)));
+			Assert.That(q_plus1 ^ q_plus2, Is.EqualTo(new QNumberBigInteger(3)));
+			Assert.That(q_plus2 ^ q_plus2, Is.EqualTo(new QNumberBigInteger(0)));
+			Assert.That(q_plus2 ^ q_plus3, Is.EqualTo(new QNumberBigInteger(1)));
+			Assert.That(q_plus255 ^ q_plus3, Is.EqualTo(new QNumberBigInteger(252)));
+			
+			// シフト <<
+			Assert.That(q_plus1 << 0, Is.EqualTo(new QNumberBigInteger(1)));
+			Assert.That(q_plus1 << 1, Is.EqualTo(new QNumberBigInteger(2)));
+			Assert.That(q_plus1 << 2, Is.EqualTo(new QNumberBigInteger(4)));
+			Assert.That(q_plus255 << 1, Is.EqualTo(new QNumberBigInteger(255<<1)));
+			Assert.That(q_plus255 << 10, Is.EqualTo(new QNumberBigInteger(255<<10)));
+
+			// シフト >>
+			Assert.That(q_plus255 >> 0, Is.EqualTo(new QNumberBigInteger(255)));
+			Assert.That(q_plus255 >> 1, Is.EqualTo(new QNumberBigInteger(255>>1)));
+			Assert.That(q_plus255 >> 2, Is.EqualTo(new QNumberBigInteger(255>>2)));
+			Assert.That(q_plus255 >> 1, Is.EqualTo(new QNumberBigInteger(255>>1)));
+			Assert.That(q_plus255 >> 10, Is.EqualTo(new QNumberBigInteger(255>>10)));
+
+			// シフト >>>
+			Assert.That(q_plus255 >>> 0, Is.EqualTo(new QNumberBigInteger(255)));
+			Assert.That(q_plus255 >>> 1, Is.EqualTo(new QNumberBigInteger(255>>>1)));
+			Assert.That(q_plus255 >>> 2, Is.EqualTo(new QNumberBigInteger(255>>>2)));
+			Assert.That(q_plus255 >>> 1, Is.EqualTo(new QNumberBigInteger(255>>>1)));
+			Assert.That(q_plus255 >>> 10, Is.EqualTo(new QNumberBigInteger(255>>>10)));
+			Assert.That(q_minus1 >>> 0, Is.EqualTo(new QNumberBigInteger(-1)));
+		}
 
 	}
 }
