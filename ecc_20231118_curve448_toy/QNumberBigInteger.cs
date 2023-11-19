@@ -8,6 +8,13 @@ namespace ecc_20231118_curve448_toy
 	{
 		BigInteger innerValue = BigInteger.Zero;
 
+		private static QNumberBigInteger _zero = new QNumberBigInteger(0);
+		private static QNumberBigInteger _one = new QNumberBigInteger(1);
+
+		public static QNumberBigInteger Zero => _zero;
+
+		public static QNumberBigInteger One => _one;
+
 		public QNumberBigInteger(Int32 x)
 		{
 			innerValue = x;
@@ -58,11 +65,7 @@ namespace ecc_20231118_curve448_toy
 			innerValue = (BigInteger)x;
 		}
 
-		public static QNumberBigInteger One => throw new NotImplementedException();
-
 		public static int Radix => throw new NotImplementedException();
-
-		public static QNumberBigInteger Zero => throw new NotImplementedException();
 
 		public static QNumberBigInteger AdditiveIdentity => throw new NotImplementedException();
 
