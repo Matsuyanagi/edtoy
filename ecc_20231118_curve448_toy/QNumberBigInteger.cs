@@ -6,7 +6,17 @@ namespace ecc_20231118_curve448_toy
 {
 	public struct QNumberBigInteger : IBinaryInteger<QNumberBigInteger>
 	{
+		public enum PossibilityPrime
+		{
+			Unknown,
+			Prime,
+			Composite,
+			None
+		}
+
 		BigInteger innerValue = BigInteger.Zero;
+		PossibilityPrime possibilityPrime = PossibilityPrime.Unknown;
+
 
 		private static readonly QNumberBigInteger _zero = new QNumberBigInteger(0);
 		private static readonly QNumberBigInteger _one = new QNumberBigInteger(1);
@@ -21,6 +31,7 @@ namespace ecc_20231118_curve448_toy
 		public QNumberBigInteger(QNumberBigInteger x)
 		{
 			innerValue = x.innerValue;
+			possibilityPrime = x.possibilityPrime;
 		}
 
 		public QNumberBigInteger(Int32 x)
@@ -133,7 +144,7 @@ namespace ecc_20231118_curve448_toy
 
 		public static bool IsNegative(QNumberBigInteger value)
 		{
-			return BigInteger.IsNegative( value.innerValue );
+			return BigInteger.IsNegative(value.innerValue);
 		}
 
 		public static bool IsNegativeInfinity(QNumberBigInteger value)
@@ -478,6 +489,169 @@ namespace ecc_20231118_curve448_toy
 		public static QNumberBigInteger operator >>>(QNumberBigInteger value, int shiftAmount)
 		{
 			return new QNumberBigInteger(value.innerValue >>> shiftAmount);
+		}
+
+		/** 素数判定
+		  * 	判定の結果は possibilityPrime にキャッシュしておき、キャッシュがあれば使う。
+		  *	キャッシュがない場合は素数判定演算をする
+		  *
+		  */
+		public bool IsPrime
+		{
+			get
+			{
+				if (possibilityPrime != PossibilityPrime.Unknown)
+				{
+					// すでに素数判定の結果があるなら素数かどうかを返す
+					return possibilityPrime == PossibilityPrime.Prime;
+				}
+				possibilityPrime = IsPrimeInnerImplement();
+
+				return possibilityPrime == PossibilityPrime.Prime;
+			}
+		}
+
+		// 素数、合成数、それ以外(0,1,マイナス)
+		public PossibilityPrime PossibilityPrimeState
+		{
+			get
+			{
+				if (possibilityPrime != PossibilityPrime.Unknown)
+				{
+					// すでに素数判定の結果があるなら素数かどうかを返す
+					return possibilityPrime;
+				}
+				possibilityPrime = IsPrimeInnerImplement();
+				return possibilityPrime;
+			}
+		}
+
+		// 素数判定の演算
+		private PossibilityPrime IsPrimeInnerImplement()
+		{
+			if (innerValue <= 1)
+			{
+				// 0,1,マイナスは None として返す
+				return PossibilityPrime.None;
+			}
+			else if (innerValue == 4)
+			{
+				// 4 は合成数
+				return PossibilityPrime.Composite;
+			}
+			else if (innerValue < 6)
+			{
+				// 2,3,5 は素数
+				return PossibilityPrime.Prime;
+			}
+			else if (innerValue.IsEven)
+			{
+				// 偶数は合成数
+				return PossibilityPrime.Composite;
+			}
+
+			// ミラーラビンテストの結果を返す
+			return IsPrimeInnerMillerRabinImplement();
+		}
+
+		// ミラーラビンテストを繰り返す
+		// 	一度でも合成数だと判定されれば合成数確定
+		private PossibilityPrime IsPrimeInnerMillerRabinImplement()
+		{
+			// 小さい素数でミラーラビンテスト
+			// Int32[] small_prime_array = [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47];
+			Int32[] small_prime_array = [2, 3, 5, 7, 11, 13, 17, 19];
+			(int, BigInteger)[] small_prime_upperbound_array = {
+				(2,2047),
+				(3,1373653),
+				(5,25326001),
+				(7,3215031751),
+				(11,2152302898747),
+				(13,3474749660383),
+				(17,341550071728321),
+				(19,341550071728321),
+				(23,3825123056546413051),
+				(29,3825123056546413051),
+				(31,3825123056546413051),
+				(37,BigInteger.Parse("318665857834031151167461")),
+				(41,BigInteger.Parse("3317044064679887385961981")),
+				(43,BigInteger.Parse("6003094289670105800312596501")),
+				(47,BigInteger.Parse("59276361075595573263446330101")),
+				(53,BigInteger.Parse("564132928021909221014087501701")),
+				(59,BigInteger.Parse("564132928021909221014087501701")),
+				(61,BigInteger.Parse("1543267864443420616877677640751301")),
+				(67,BigInteger.Parse("1543267864443420616877677640751301")),
+				(71,BigInteger.Parse("100000000000000000000000000000000000")),
+			};
+
+			// 判定に使う innerValue から求まる d
+			var d = innerValue - 1;
+			while (d.IsEven)
+			{
+				d >>= 1;
+			}
+
+			foreach (var (n, upper) in small_prime_upperbound_array)
+			{
+				if (BigInteger.GreatestCommonDivisor(n, innerValue) != BigInteger.One)
+				{
+					// 最大公約数1以外を持つ。約数を持っているので合成数
+					return PossibilityPrime.Composite;
+				}
+
+				// ミラーラビンテスト1つの元に対しての判定
+				if (IsPrimeInnerMillerRabinInnerImplement(n, d) == PossibilityPrime.Composite)
+				{
+					// 合成数確定
+					return PossibilityPrime.Composite;
+				}
+				if (innerValue < upper)
+				{
+					// 合成数でなく(擬素数)で、強擬素数の上限未満なら、素数確定
+					return PossibilityPrime.Prime;
+				}
+			}
+			// 乱数でミラーラビンテスト 確率的に。
+			// 乱数発生器
+			var randomgen = new Random();
+			// 繰返し回数 : 間違う確率が 4^-k だとして、ビット長の 1/2 回以上繰り返す
+			var bit_length = innerValue.GetBitLength();
+			var loop_count = (bit_length >> 1) + 5;
+			for (int i = 0; i < loop_count; i++)
+			{
+				var random = randomgen.Next(41, 0x0fff_ffff + 41);
+				if (BigInteger.GreatestCommonDivisor(random, innerValue) != BigInteger.One)
+				{
+					// 最大公約数1以外を持つ。約数を持っているので合成数
+					return PossibilityPrime.Composite;
+				}
+				if (IsPrimeInnerMillerRabinInnerImplement(random, d) == PossibilityPrime.Composite)
+				{
+					return PossibilityPrime.Composite;
+				}
+			}
+
+			// すべての判定をすり抜ければ(確率的)素数確定
+			return PossibilityPrime.Prime;
+		}
+
+		// ミラーラビンテスト
+		private PossibilityPrime IsPrimeInnerMillerRabinInnerImplement(Int32 a, BigInteger d)
+		{
+			var t = d;
+			var y = BigInteger.ModPow(a, t, innerValue);
+			var innerValue_1 = innerValue - 1;
+			while (t != innerValue_1 && y != 1 && y != innerValue_1)
+			{
+				// y = (y * y) % innerValue;
+				y = BigInteger.ModPow(y, 2, innerValue);	// (y * y) % innerValue
+				t <<= 1;
+			}
+			if (y != innerValue_1 && t.IsEven)
+			{
+				return PossibilityPrime.Composite;
+			}
+			return PossibilityPrime.Prime;
 		}
 	}
 }
