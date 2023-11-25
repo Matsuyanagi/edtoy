@@ -251,8 +251,8 @@ namespace Tests
 		[Test]
 		public void TestPrime()
 		{
-			// Assert.That((new QNumberBigInteger(0)).IsPrime, Is.EqualTo(true));
-			// Assert.That((new QNumberBigInteger(1)).IsPrime, Is.EqualTo(true));
+			Assert.That((new QNumberBigInteger(0)).IsPrime, Is.EqualTo(false));
+			Assert.That((new QNumberBigInteger(1)).IsPrime, Is.EqualTo(false));
 			var q = new QNumberBigInteger(0);
 			Assert.That(q.IsPrime, Is.EqualTo(false));
 			Assert.That(q.PossibilityPrimeState, Is.EqualTo(QNumberBigInteger.PossibilityPrime.None));
