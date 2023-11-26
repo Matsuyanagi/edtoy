@@ -276,5 +276,56 @@ namespace Tests
 			Assert.That(q.PossibilityPrimeState, Is.EqualTo(QNumberBigInteger.PossibilityPrime.Prime));
 		}
 
+		[Test]
+		public void TestMod()
+		{
+			var a = new QNumberBigInteger(11);
+			var prime = new QNumberBigInteger(43);
+
+			a = new QNumberBigInteger(11);
+			Assert.That(a.Mod(prime), Is.EqualTo(new QNumberBigInteger(11)));
+			a = new QNumberBigInteger(111);
+			Assert.That(a.Mod(prime), Is.EqualTo(new QNumberBigInteger(25)));
+			a = new QNumberBigInteger(1111);
+			Assert.That(a.Mod(prime), Is.EqualTo(new QNumberBigInteger(36)));
+			a = new QNumberBigInteger(1111);
+			Assert.That(a.Mod(prime), Is.EqualTo(new QNumberBigInteger(36)));
+			a = new QNumberBigInteger(-1);
+			Assert.That(a.Mod(prime), Is.EqualTo(new QNumberBigInteger(42)));
+			a = new QNumberBigInteger(-2);
+			Assert.That(a.Mod(prime), Is.EqualTo(new QNumberBigInteger(41)));
+			a = new QNumberBigInteger(-43);
+			Assert.That(a.Mod(prime), Is.EqualTo(new QNumberBigInteger(0)));
+			a = new QNumberBigInteger(-44);
+			Assert.That(a.Mod(prime), Is.EqualTo(new QNumberBigInteger(42)));
+			a = new QNumberBigInteger(-100);
+			Assert.That(a.Mod(prime), Is.EqualTo(new QNumberBigInteger(29)));
+		}
+		[Test]
+		public void TestPowMod()
+		{
+			var a = new QNumberBigInteger(11);
+			var prime = new QNumberBigInteger(43);
+
+			a = new QNumberBigInteger(11);
+			Assert.That(a.PowMod(new QNumberBigInteger(0), prime), Is.EqualTo(new QNumberBigInteger(1)));
+			a = new QNumberBigInteger(11);
+			Assert.That(a.PowMod(new QNumberBigInteger(1), prime), Is.EqualTo(new QNumberBigInteger(11)));
+			a = new QNumberBigInteger(11);
+			Assert.That(a.PowMod(new QNumberBigInteger(2), prime), Is.EqualTo(new QNumberBigInteger(35)));
+			a = new QNumberBigInteger(11);
+			Assert.That(a.PowMod(new QNumberBigInteger(42), prime), Is.EqualTo(new QNumberBigInteger(1)));
+			a = new QNumberBigInteger(11);
+			Assert.That(a.PowMod(new QNumberBigInteger(43), prime), Is.EqualTo(new QNumberBigInteger(11)));
+			a = new QNumberBigInteger(11);
+			Assert.That(a.PowMod(new QNumberBigInteger(44), prime), Is.EqualTo(new QNumberBigInteger(35)));
+			a = new QNumberBigInteger(11);
+			Assert.That(a.PowMod(new QNumberBigInteger(90), prime), Is.EqualTo(new QNumberBigInteger(4)));
+			a = new QNumberBigInteger(11);
+			Assert.That(a.PowMod(new QNumberBigInteger(130), prime), Is.EqualTo(new QNumberBigInteger(21)));
+			// a = new QNumberBigInteger(11);
+			// Assert.That(a.PowMod(new QNumberBigInteger(-1), prime), Is.EqualTo(new QNumberBigInteger(4)));
+		}
+
 	}
 }

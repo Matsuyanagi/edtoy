@@ -92,7 +92,12 @@ namespace ecc_20231118_curve448_toy
 
 		public static QNumberBigInteger Abs(QNumberBigInteger value)
 		{
-			throw new NotImplementedException();
+			return value.Abs();
+		}
+
+		public QNumberBigInteger Abs()
+		{
+			return new QNumberBigInteger(BigInteger.Abs(innerValue));
 		}
 
 		public static bool IsCanonical(QNumberBigInteger value)
@@ -145,6 +150,11 @@ namespace ecc_20231118_curve448_toy
 		public static bool IsNegative(QNumberBigInteger value)
 		{
 			return BigInteger.IsNegative(value.innerValue);
+		}
+
+		public bool IsNegative()
+		{
+			return BigInteger.IsNegative(innerValue);
 		}
 
 		public static bool IsNegativeInfinity(QNumberBigInteger value)
@@ -560,7 +570,7 @@ namespace ecc_20231118_curve448_toy
 		{
 			// 小さい素数でミラーラビンテスト
 			// Int32[] small_prime_array = [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47];
-			Int32[] small_prime_array = [2, 3, 5, 7, 11, 13, 17, 19];
+			// Int32[] small_prime_array = [2, 3, 5, 7, 11, 13, 17, 19];
 			(int, BigInteger)[] small_prime_upperbound_array = {
 				(2,2047),
 				(3,1373653),
@@ -644,7 +654,7 @@ namespace ecc_20231118_curve448_toy
 			while (t != innerValue_1 && y != 1 && y != innerValue_1)
 			{
 				// y = (y * y) % innerValue;
-				y = BigInteger.ModPow(y, 2, innerValue);	// (y * y) % innerValue
+				y = BigInteger.ModPow(y, 2, innerValue);    // (y * y) % innerValue
 				t <<= 1;
 			}
 			if (y != innerValue_1 && t.IsEven)
@@ -653,5 +663,66 @@ namespace ecc_20231118_curve448_toy
 			}
 			return PossibilityPrime.Prime;
 		}
+
+		/// <summary>
+		/// 累乗して剰余を求める
+		/// </summary>
+		/// <param name="a">累乗する底</param>
+		/// <param name="exp">指数</param>
+		/// <param name="modulus">剰余を求める除数</param>
+		/// <returns>a^exp % modulus</returns>
+		public static QNumberBigInteger ModPow(QNumberBigInteger a, QNumberBigInteger exp, QNumberBigInteger modulus)
+		{
+			return new QNumberBigInteger(BigInteger.ModPow(a.innerValue, exp.innerValue, modulus.innerValue));
+		}
+
+		/// <summary>
+		/// 0～prime-1 までの剰余に変換する
+		/// </summary>
+		/// <param name="a">元の値</param>
+		/// <param name="prime">除数</param>
+		/// <returns></returns>
+		public static QNumberBigInteger Mod(QNumberBigInteger a, QNumberBigInteger prime)
+		{
+			return a.Mod(prime);
+		}
+
+		/// <summary>
+		/// 0～prime-1 までの剰余に変換する
+		/// </summary>
+		/// <param name="modulus">除数</param>
+		/// <returns></returns>
+		public QNumberBigInteger Mod(QNumberBigInteger modulus)
+		{
+			if (this > modulus)
+			{
+				return this % modulus;
+			}
+			else if (IsNegative())
+			{
+				var abs = Abs();
+				if (abs <= modulus)
+				{
+					return modulus - abs;
+				}
+				else
+				{
+					return modulus - abs % modulus;
+				}
+			}
+			return this;
+		}
+
+		/// <summary>
+		/// 累乗して剰余を求める
+		/// </summary>
+		/// <param name="exp">指数</param>
+		/// <param name="modulus">剰余を求める除数</param>
+		/// <returns>self^exp % modulus</returns>
+		public QNumberBigInteger PowMod(QNumberBigInteger exp, QNumberBigInteger modulus)
+		{
+			return new QNumberBigInteger(BigInteger.ModPow(innerValue, exp.innerValue, modulus.innerValue));
+		}
+
 	}
 }
