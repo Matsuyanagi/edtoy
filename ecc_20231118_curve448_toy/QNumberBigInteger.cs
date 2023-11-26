@@ -721,7 +721,13 @@ namespace ecc_20231118_curve448_toy
 		/// <returns>self^exp % modulus</returns>
 		public QNumberBigInteger PowMod(QNumberBigInteger exp, QNumberBigInteger modulus)
 		{
-			return new QNumberBigInteger(BigInteger.ModPow(innerValue, exp.innerValue, modulus.innerValue));
+			// return new QNumberBigInteger(BigInteger.ModPow(innerValue, exp.innerValue, modulus.innerValue));
+			if (exp == Zero)
+			{
+				return One;
+			}
+			QNumberBigInteger e = exp.Mod(modulus - One);
+			return new QNumberBigInteger(BigInteger.ModPow(innerValue, e.innerValue, modulus.innerValue));
 		}
 
 	}
