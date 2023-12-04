@@ -10,17 +10,14 @@ namespace Tests
 		{
 		}
 
-		[Test]
-		public void TestSimpleValue()
+		[TestCase(0, "0")]
+		[TestCase(1, "1")]
+		[TestCase(99, "99")]
+		[TestCase(-100, "-100")]
+		public void TestSimpleValue(Int64 n, String expect)
 		{
-			QNumberBigInteger qn = new QNumberBigInteger(0);
-			Assert.That(qn.ToString(), Is.EqualTo("0"));
-			qn = new QNumberBigInteger(1);
-			Assert.That(qn.ToString(), Is.EqualTo("1"));
-			qn = new QNumberBigInteger(99);
-			Assert.That(qn.ToString(), Is.EqualTo("99"));
-			qn = new QNumberBigInteger(-100);
-			Assert.That(qn.ToString(), Is.EqualTo("-100"));
+			QNumberBigInteger qn = new QNumberBigInteger(n);
+			Assert.That(qn.ToString(), Is.EqualTo(expect));
 		}
 		[Test]
 		public void TestStaticZeroOne()
@@ -35,31 +32,74 @@ namespace Tests
 			Assert.That(qn.ToString(), Is.EqualTo("-1"));
 			Assert.That(qn, Is.EqualTo(new QNumberBigInteger(-1)));
 		}
-		[Test]
-		public void TestLessAndGreater()
+
+		[TestCase(-1, 0)]
+		[TestCase(-1, 1)]
+		[TestCase(0, 1)]
+		public void TestLessThan(Int64 l, Int64 r)
 		{
-			QNumberBigInteger q_0 = QNumberBigInteger.Zero;
-			QNumberBigInteger q_minus1 = new QNumberBigInteger(-1);
-			QNumberBigInteger q_plus1 = new QNumberBigInteger(1);
-
-			Assert.That(q_minus1, Is.LessThan(q_0));
-			Assert.That(q_minus1, Is.LessThan(q_plus1));
-			Assert.That(q_minus1, Is.LessThanOrEqualTo(q_0));
-			Assert.That(q_minus1, Is.LessThanOrEqualTo(q_plus1));
-
-			Assert.That(q_plus1, Is.GreaterThan(q_0));
-			Assert.That(q_plus1, Is.GreaterThan(q_minus1));
-			Assert.That(q_plus1, Is.GreaterThanOrEqualTo(q_0));
-			Assert.That(q_plus1, Is.GreaterThanOrEqualTo(q_minus1));
-
-			Assert.That(q_minus1 < q_plus1, Is.True);
-			Assert.That(q_plus1 > q_minus1, Is.True);
-			Assert.That(q_minus1 != q_plus1, Is.True);
-			Assert.That(q_0 == new QNumberBigInteger(0), Is.True);
-
-			Assert.That(q_minus1 <= q_plus1, Is.True);
-			Assert.That(q_plus1 >= q_minus1, Is.True);
+			Assert.That(new QNumberBigInteger(l), Is.LessThan(new QNumberBigInteger(r)));
 		}
+
+		[TestCase(-1, 0)]
+		[TestCase(-1, 1)]
+		[TestCase(0, 1)]
+		[TestCase(0, 0)]
+		[TestCase(1, 1)]
+		[TestCase(-1, -1)]
+		public void TestLessThanOrEqualTo(Int64 l, Int64 r)
+		{
+			Assert.That(new QNumberBigInteger(l), Is.LessThanOrEqualTo(new QNumberBigInteger(r)));
+		}
+
+		[TestCase(1, 0)]
+		[TestCase(1, -1)]
+		[TestCase(0, -1)]
+		public void TestGreaterThan(Int64 l, Int64 r)
+		{
+			Assert.That(new QNumberBigInteger(l), Is.GreaterThan(new QNumberBigInteger(r)));
+		}
+
+		[TestCase(1, 0)]
+		[TestCase(1, -1)]
+		[TestCase(1, 1)]
+		public void TestGreaterThanOrEqualTo(Int64 l, Int64 r)
+		{
+			Assert.That(new QNumberBigInteger(l), Is.GreaterThanOrEqualTo(new QNumberBigInteger(r)));
+		}
+
+		[TestCase(-1, 0)]
+		[TestCase(-1, 1)]
+		[TestCase(0, 1)]
+		public void TestLessThanSymbol(Int64 l, Int64 r)
+		{
+			Assert.That(new QNumberBigInteger(l) < new QNumberBigInteger(r), Is.True);
+		}
+
+		[TestCase(1, 0)]
+		[TestCase(1, -1)]
+		[TestCase(0, -1)]
+		public void TestGreaterThanSymbol(Int64 l, Int64 r)
+		{
+			Assert.That(new QNumberBigInteger(l) > new QNumberBigInteger(r), Is.True);
+		}
+
+		[TestCase(1, 0)]
+		[TestCase(1, -1)]
+		[TestCase(0, -1)]
+		public void TestNotEqualSymbol(Int64 l, Int64 r)
+		{
+			Assert.That(new QNumberBigInteger(l) != new QNumberBigInteger(r), Is.True);
+		}
+
+		[TestCase(0, 0)]
+		[TestCase(-1, -1)]
+		[TestCase(1, 1)]
+		public void TestEqualSymbol(Int64 l, Int64 r)
+		{
+			Assert.That(new QNumberBigInteger(l) == new QNumberBigInteger(r), Is.True);
+		}
+
 		[Test]
 		public void TestSimpleArithmeticPlusMinus()
 		{
@@ -103,107 +143,123 @@ namespace Tests
 			Assert.That(qm0, Is.EqualTo(new QNumberBigInteger(0)));
 		}
 
-		[Test]
-		public void TestSimpleArithmeticMulDiv()
+		[TestCase(1, 1, 1)]
+		[TestCase(1, 0, 0)]
+		[TestCase(2, 100, 200)]
+		[TestCase(100, 2, 200)]
+		[TestCase(100, 0, 0)]
+		[TestCase(100, 1, 100)]
+		[TestCase(10, -1, -10)]
+		[TestCase(0, -1, 0)]
+		[TestCase(-1, -1, 1)]
+		public void TestSimpleArithmeticMul(Int32 a, Int32 b, Int32 expect)
 		{
-			QNumberBigInteger q_0 = QNumberBigInteger.Zero;
-			QNumberBigInteger q_minus1 = new QNumberBigInteger(-1);
-			QNumberBigInteger q_plus1 = new QNumberBigInteger(1);
-			QNumberBigInteger q_plus2 = new QNumberBigInteger(2);
-			QNumberBigInteger q_plus3 = new QNumberBigInteger(3);
-			QNumberBigInteger q_plus100 = new QNumberBigInteger(100);
-
 			// * 二項乗算
-			Assert.That(q_plus1 * q_plus1, Is.EqualTo(new QNumberBigInteger(1)));
-			Assert.That(q_plus1 * q_0, Is.EqualTo(new QNumberBigInteger(0)));
-			Assert.That(q_plus2 * q_plus100, Is.EqualTo(new QNumberBigInteger(200)));
-			Assert.That(q_plus100 * q_plus2, Is.EqualTo(q_plus2 * q_plus100));
-			Assert.That(q_plus100 * q_0, Is.EqualTo(new QNumberBigInteger(0)));
-			Assert.That(q_plus100 * q_plus1, Is.EqualTo(new QNumberBigInteger(100)));
-			Assert.That(q_plus100 * q_minus1, Is.EqualTo(new QNumberBigInteger(-100)));
-			Assert.That(q_0 * q_minus1, Is.EqualTo(new QNumberBigInteger(0)));
-			Assert.That(q_minus1 * q_minus1, Is.EqualTo(new QNumberBigInteger(1)));
-
-			// / 二項除算
-			Assert.That(q_plus1 / q_plus1, Is.EqualTo(new QNumberBigInteger(1)));
-			Assert.That(q_plus100 / q_plus1, Is.EqualTo(new QNumberBigInteger(100)));
-			Assert.That(q_plus100 / q_plus100, Is.EqualTo(new QNumberBigInteger(1)));
-			Assert.That(q_plus1 / q_plus100, Is.EqualTo(new QNumberBigInteger(0)));
-			Assert.That(q_minus1 / q_minus1, Is.EqualTo(new QNumberBigInteger(1)));
-			Assert.That(q_0 / q_plus1, Is.EqualTo(new QNumberBigInteger(0)));
-			Assert.That(q_0 / q_minus1, Is.EqualTo(new QNumberBigInteger(0)));
-			Assert.That(q_plus100 / q_minus1, Is.EqualTo(new QNumberBigInteger(-100)));
-
-			// % 剰余算
-			Assert.That(q_plus1 % q_plus1, Is.EqualTo(new QNumberBigInteger(0)));
-			Assert.That(q_plus100 % q_plus2, Is.EqualTo(new QNumberBigInteger(0)));
-			Assert.That(q_plus100 % q_plus3, Is.EqualTo(new QNumberBigInteger(1)));
-			Assert.That(q_0 % q_plus3, Is.EqualTo(new QNumberBigInteger(0)));
-			Assert.That(q_0 % q_plus1, Is.EqualTo(new QNumberBigInteger(0)));
-			Assert.That(q_0 % q_minus1, Is.EqualTo(new QNumberBigInteger(0)));
-			Assert.That(q_plus100 % q_minus1, Is.EqualTo(new QNumberBigInteger(0)));
-			Assert.That(q_plus100 % (q_minus1 * q_plus3), Is.EqualTo(new QNumberBigInteger(1)));
-			Assert.That((q_plus100 * q_minus1) % q_plus3, Is.EqualTo(new QNumberBigInteger(-1)));
+			Assert.That(new QNumberBigInteger(a) * new QNumberBigInteger(b), Is.EqualTo(new QNumberBigInteger(expect)));
 		}
 
-		[Test]
-		public void TestSimpleArithmeticBitOp()
+		[TestCase(1, 1, 1)]
+		[TestCase(100, 1, 100)]
+		[TestCase(100, 100, 1)]
+		[TestCase(1, 100, 0)]
+		[TestCase(-1, -1, 1)]
+		[TestCase(0, 1, 0)]
+		[TestCase(0, -1, 0)]
+		[TestCase(100, -1, -100)]
+		public void TestSimpleArithmeticDiv(Int32 a, Int32 b, Int32 expect)
 		{
-			QNumberBigInteger q_0 = QNumberBigInteger.Zero;
-			QNumberBigInteger q_plus1 = new QNumberBigInteger(1);
-			QNumberBigInteger q_plus2 = new QNumberBigInteger(2);
-			QNumberBigInteger q_plus3 = new QNumberBigInteger(3);
-			QNumberBigInteger q_plus255 = new QNumberBigInteger(255);
-			QNumberBigInteger q_minus1 = new QNumberBigInteger(-1);
+			// / 二項除算
+			Assert.That(new QNumberBigInteger(a) / new QNumberBigInteger(b), Is.EqualTo(new QNumberBigInteger(expect)));
+		}
 
+		[TestCase(1, 1, 0)]
+		[TestCase(100, 2, 0)]
+		[TestCase(100, 3, 1)]
+		[TestCase(0, 3, 0)]
+		[TestCase(0, 1, 0)]
+		[TestCase(0, -1, 0)]
+		[TestCase(100, -1, 0)]
+		[TestCase(100, -3, 1)]
+		[TestCase(-100, 3, -1)]
+		public void TestSimpleArithmeticMod(Int32 a, Int32 b, Int32 expect)
+		{
+			// % 剰余算
+			Assert.That(new QNumberBigInteger(a) % new QNumberBigInteger(b), Is.EqualTo(new QNumberBigInteger(expect)));
+		}
+
+		[TestCase(0, 0, 0)]
+		[TestCase(0, 1, 0)]
+		[TestCase(1, 1, 1)]
+		[TestCase(1, 2, 0)]
+		[TestCase(2, 2, 2)]
+		[TestCase(255, 3, 3)]
+		[TestCase(-1, 3, 3)]
+		public void TestSimpleArithmeticBitOpAnd(Int64 a, Int64 b, Int64 r)
+		{
 			// 二項演算 &
-			Assert.That(q_0 & q_0, Is.EqualTo(new QNumberBigInteger(0)));
-			Assert.That(q_0 & q_plus1, Is.EqualTo(new QNumberBigInteger(0)));
-			Assert.That(q_plus1 & q_plus1, Is.EqualTo(new QNumberBigInteger(1)));
-			Assert.That(q_plus1 & q_plus2, Is.EqualTo(new QNumberBigInteger(0)));
-			Assert.That(q_plus2 & q_plus2, Is.EqualTo(new QNumberBigInteger(2)));
-			Assert.That(q_plus2 & q_plus3, Is.EqualTo(new QNumberBigInteger(2)));
-			Assert.That(q_plus255 & q_plus3, Is.EqualTo(new QNumberBigInteger(3)));
+			Assert.That(new QNumberBigInteger(a) & new QNumberBigInteger(b), Is.EqualTo(new QNumberBigInteger(r)));
+		}
 
+		[TestCase(0, 0, 0)]
+		[TestCase(0, 1, 1)]
+		[TestCase(1, 1, 1)]
+		[TestCase(1, 2, 3)]
+		[TestCase(2, 2, 2)]
+		[TestCase(255, 3, 255)]
+		[TestCase(-1, 3, -1)]
+		public void TestSimpleArithmeticBitOpOr(Int64 a, Int64 b, Int64 r)
+		{
 			// 二項演算 |
-			Assert.That(q_0 | q_0, Is.EqualTo(new QNumberBigInteger(0)));
-			Assert.That(q_0 | q_plus1, Is.EqualTo(new QNumberBigInteger(1)));
-			Assert.That(q_plus1 | q_plus1, Is.EqualTo(new QNumberBigInteger(1)));
-			Assert.That(q_plus1 | q_plus2, Is.EqualTo(new QNumberBigInteger(3)));
-			Assert.That(q_plus2 | q_plus2, Is.EqualTo(new QNumberBigInteger(2)));
-			Assert.That(q_plus2 | q_plus3, Is.EqualTo(new QNumberBigInteger(3)));
-			Assert.That(q_plus255 | q_plus3, Is.EqualTo(new QNumberBigInteger(255)));
+			Assert.That(new QNumberBigInteger(a) | new QNumberBigInteger(b), Is.EqualTo(new QNumberBigInteger(r)));
+		}
 
+		[TestCase(0, 0, 0)]
+		[TestCase(0, 1, 1)]
+		[TestCase(1, 1, 0)]
+		[TestCase(1, 2, 3)]
+		[TestCase(2, 2, 0)]
+		[TestCase(255, 3, 252)]
+		[TestCase(-1, 3, -4)]
+		public void TestSimpleArithmeticBitOpXor(Int64 a, Int64 b, Int64 r)
+		{
 			// 二項演算 ^
-			Assert.That(q_0 ^ q_0, Is.EqualTo(new QNumberBigInteger(0)));
-			Assert.That(q_0 ^ q_plus1, Is.EqualTo(new QNumberBigInteger(1)));
-			Assert.That(q_plus1 ^ q_plus1, Is.EqualTo(new QNumberBigInteger(0)));
-			Assert.That(q_plus1 ^ q_plus2, Is.EqualTo(new QNumberBigInteger(3)));
-			Assert.That(q_plus2 ^ q_plus2, Is.EqualTo(new QNumberBigInteger(0)));
-			Assert.That(q_plus2 ^ q_plus3, Is.EqualTo(new QNumberBigInteger(1)));
-			Assert.That(q_plus255 ^ q_plus3, Is.EqualTo(new QNumberBigInteger(252)));
+			Assert.That(new QNumberBigInteger(a) ^ new QNumberBigInteger(b), Is.EqualTo(new QNumberBigInteger(r)));
+		}
 
+		[TestCase(0, 0, 0)]
+		[TestCase(0, 1, 0)]
+		[TestCase(1, 1, 1 << 1)]
+		[TestCase(1, 2, 1 << 2)]
+		[TestCase(2, 2, 2 << 2)]
+		[TestCase(2, 10, 2 << 10)]
+		public void TestSimpleArithmeticBitOpShiftL(Int64 a, Int32 b, Int64 r)
+		{
 			// シフト <<
-			Assert.That(q_plus1 << 0, Is.EqualTo(new QNumberBigInteger(1)));
-			Assert.That(q_plus1 << 1, Is.EqualTo(new QNumberBigInteger(2)));
-			Assert.That(q_plus1 << 2, Is.EqualTo(new QNumberBigInteger(4)));
-			Assert.That(q_plus255 << 1, Is.EqualTo(new QNumberBigInteger(255 << 1)));
-			Assert.That(q_plus255 << 10, Is.EqualTo(new QNumberBigInteger(255 << 10)));
+			Assert.That(new QNumberBigInteger(a) << b, Is.EqualTo(new QNumberBigInteger(r)));
+		}
 
+		[TestCase(0, 0, 0)]
+		[TestCase(0, 1, 0)]
+		[TestCase(1, 1, 1 >> 1)]
+		[TestCase(1, 2, 1 >> 2)]
+		[TestCase(255, 2, 255 >> 2)]
+		[TestCase(2, 10, 2 >> 10)]
+		public void TestSimpleArithmeticBitOpShiftR(Int64 a, Int32 b, Int64 r)
+		{
 			// シフト >>
-			Assert.That(q_plus255 >> 0, Is.EqualTo(new QNumberBigInteger(255)));
-			Assert.That(q_plus255 >> 1, Is.EqualTo(new QNumberBigInteger(255 >> 1)));
-			Assert.That(q_plus255 >> 2, Is.EqualTo(new QNumberBigInteger(255 >> 2)));
-			Assert.That(q_plus255 >> 1, Is.EqualTo(new QNumberBigInteger(255 >> 1)));
-			Assert.That(q_plus255 >> 10, Is.EqualTo(new QNumberBigInteger(255 >> 10)));
+			Assert.That(new QNumberBigInteger(a) >> b, Is.EqualTo(new QNumberBigInteger(r)));
+		}
 
+		[TestCase(0, 0, 0 >>> 0)]
+		[TestCase(0, 1, 0 >>> 1)]
+		[TestCase(1, 1, 1 >>> 1)]
+		[TestCase(1, 2, 1 >>> 2)]
+		[TestCase(255, 2, 255 >>> 2)]
+		[TestCase(2, 10, 2 >>> 10)]
+		public void TestSimpleArithmeticBitOpShiftRR(Int64 a, Int32 b, Int64 r)
+		{
 			// シフト >>>
-			Assert.That(q_plus255 >>> 0, Is.EqualTo(new QNumberBigInteger(255)));
-			Assert.That(q_plus255 >>> 1, Is.EqualTo(new QNumberBigInteger(255 >>> 1)));
-			Assert.That(q_plus255 >>> 2, Is.EqualTo(new QNumberBigInteger(255 >>> 2)));
-			Assert.That(q_plus255 >>> 1, Is.EqualTo(new QNumberBigInteger(255 >>> 1)));
-			Assert.That(q_plus255 >>> 10, Is.EqualTo(new QNumberBigInteger(255 >>> 10)));
-			Assert.That(q_minus1 >>> 0, Is.EqualTo(new QNumberBigInteger(-1)));
+			Assert.That(new QNumberBigInteger(a) >>> b, Is.EqualTo(new QNumberBigInteger(r)));
 		}
 
 		[Test]
@@ -211,35 +267,35 @@ namespace Tests
 		{
 			Assert.That(QNumberBigInteger.AdditiveIdentity, Is.EqualTo(new QNumberBigInteger(0)));
 			Assert.That(QNumberBigInteger.MultiplicativeIdentity, Is.EqualTo(new QNumberBigInteger(1)));
-			Assert.That(QNumberBigInteger.IsNegative(new QNumberBigInteger(0)), Is.EqualTo(false));
-			Assert.That(QNumberBigInteger.IsNegative(new QNumberBigInteger(-1)), Is.EqualTo(true));
-			Assert.That(QNumberBigInteger.IsNegative(new QNumberBigInteger(1)), Is.EqualTo(false));
+			Assert.That(QNumberBigInteger.IsNegative(new QNumberBigInteger(0)), Is.False);
+			Assert.That(QNumberBigInteger.IsNegative(new QNumberBigInteger(-1)), Is.True);
+			Assert.That(QNumberBigInteger.IsNegative(new QNumberBigInteger(1)), Is.False);
 
-			Assert.That(QNumberBigInteger.IsComplexNumber(new QNumberBigInteger(1)), Is.EqualTo(false));
+			Assert.That(QNumberBigInteger.IsComplexNumber(new QNumberBigInteger(1)), Is.False);
 
-			Assert.That(QNumberBigInteger.IsEvenInteger(new QNumberBigInteger(0)), Is.EqualTo(true));
-			Assert.That(QNumberBigInteger.IsEvenInteger(new QNumberBigInteger(1)), Is.EqualTo(false));
-			Assert.That(QNumberBigInteger.IsEvenInteger(new QNumberBigInteger(2)), Is.EqualTo(true));
+			Assert.That(QNumberBigInteger.IsEvenInteger(new QNumberBigInteger(0)), Is.True);
+			Assert.That(QNumberBigInteger.IsEvenInteger(new QNumberBigInteger(1)), Is.False);
+			Assert.That(QNumberBigInteger.IsEvenInteger(new QNumberBigInteger(2)), Is.True);
 
-			Assert.That((new QNumberBigInteger(0)).IsPowerOfTwo, Is.EqualTo(false));
-			Assert.That((new QNumberBigInteger(1)).IsPowerOfTwo, Is.EqualTo(true));
-			Assert.That((new QNumberBigInteger(2)).IsPowerOfTwo, Is.EqualTo(true));
-			Assert.That((new QNumberBigInteger(3)).IsPowerOfTwo, Is.EqualTo(false));
-			Assert.That((new QNumberBigInteger(100)).IsPowerOfTwo, Is.EqualTo(false));
-			Assert.That((new QNumberBigInteger(127)).IsPowerOfTwo, Is.EqualTo(false));
-			Assert.That((new QNumberBigInteger(128)).IsPowerOfTwo, Is.EqualTo(true));
+			Assert.That((new QNumberBigInteger(0)).IsPowerOfTwo, Is.False);
+			Assert.That((new QNumberBigInteger(1)).IsPowerOfTwo, Is.True);
+			Assert.That((new QNumberBigInteger(2)).IsPowerOfTwo, Is.True);
+			Assert.That((new QNumberBigInteger(3)).IsPowerOfTwo, Is.False);
+			Assert.That((new QNumberBigInteger(100)).IsPowerOfTwo, Is.False);
+			Assert.That((new QNumberBigInteger(127)).IsPowerOfTwo, Is.False);
+			Assert.That((new QNumberBigInteger(128)).IsPowerOfTwo, Is.True);
 
-			Assert.That((new QNumberBigInteger(0)).IsEven, Is.EqualTo(true));
-			Assert.That((new QNumberBigInteger(1)).IsEven, Is.EqualTo(false));
-			Assert.That((new QNumberBigInteger(2)).IsEven, Is.EqualTo(true));
-			Assert.That((new QNumberBigInteger(3)).IsEven, Is.EqualTo(false));
-			Assert.That((new QNumberBigInteger(127)).IsEven, Is.EqualTo(false));
-			Assert.That((new QNumberBigInteger(128)).IsEven, Is.EqualTo(true));
+			Assert.That((new QNumberBigInteger(0)).IsEven, Is.True);
+			Assert.That((new QNumberBigInteger(1)).IsEven, Is.False);
+			Assert.That((new QNumberBigInteger(2)).IsEven, Is.True);
+			Assert.That((new QNumberBigInteger(3)).IsEven, Is.False);
+			Assert.That((new QNumberBigInteger(127)).IsEven, Is.False);
+			Assert.That((new QNumberBigInteger(128)).IsEven, Is.True);
 
-			Assert.That((new QNumberBigInteger(-1)).IsOne, Is.EqualTo(false));
-			Assert.That((new QNumberBigInteger(0)).IsOne, Is.EqualTo(false));
-			Assert.That((new QNumberBigInteger(1)).IsOne, Is.EqualTo(true));
-			Assert.That((new QNumberBigInteger(2)).IsOne, Is.EqualTo(false));
+			Assert.That((new QNumberBigInteger(-1)).IsOne, Is.False);
+			Assert.That((new QNumberBigInteger(0)).IsOne, Is.False);
+			Assert.That((new QNumberBigInteger(1)).IsOne, Is.True);
+			Assert.That((new QNumberBigInteger(2)).IsOne, Is.False);
 
 			Assert.That((new QNumberBigInteger(0)).Sign, Is.EqualTo(0));
 			Assert.That((new QNumberBigInteger(1)).Sign, Is.EqualTo(1));
@@ -251,89 +307,72 @@ namespace Tests
 		[Test]
 		public void TestPrime()
 		{
-			Assert.That((new QNumberBigInteger(0)).IsPrime, Is.EqualTo(false));
-			Assert.That((new QNumberBigInteger(1)).IsPrime, Is.EqualTo(false));
+			Assert.That((new QNumberBigInteger(0)).IsPrime, Is.False);
+			Assert.That((new QNumberBigInteger(1)).IsPrime, Is.False);
 			var q = new QNumberBigInteger(0);
-			Assert.That(q.IsPrime, Is.EqualTo(false));
+			Assert.That(q.IsPrime, Is.False);
 			Assert.That(q.PossibilityPrimeState, Is.EqualTo(QNumberBigInteger.PossibilityPrime.None));
 			q = new QNumberBigInteger(7);
-			Assert.That(q.IsPrime, Is.EqualTo(true));
+			Assert.That(q.IsPrime, Is.True);
 			Assert.That(q.PossibilityPrimeState, Is.EqualTo(QNumberBigInteger.PossibilityPrime.Prime));
 			q = new QNumberBigInteger(2047);
-			Assert.That(q.IsPrime, Is.EqualTo(false));
+			Assert.That(q.IsPrime, Is.False);
 			Assert.That(q.PossibilityPrimeState, Is.EqualTo(QNumberBigInteger.PossibilityPrime.Composite));
 			q = new QNumberBigInteger(3331);
-			Assert.That(q.IsPrime, Is.EqualTo(true));
+			Assert.That(q.IsPrime, Is.True);
 			Assert.That(q.PossibilityPrimeState, Is.EqualTo(QNumberBigInteger.PossibilityPrime.Prime));
 			q = new QNumberBigInteger(18446744073709551557);
-			Assert.That(q.IsPrime, Is.EqualTo(true));
+			Assert.That(q.IsPrime, Is.True);
 			Assert.That(q.PossibilityPrimeState, Is.EqualTo(QNumberBigInteger.PossibilityPrime.Prime));
 			q = new QNumberBigInteger(BigInteger.Parse("1543267864443420616877677640751301"));
-			Assert.That(q.IsPrime, Is.EqualTo(false));
+			Assert.That(q.IsPrime, Is.False);
 			Assert.That(q.PossibilityPrimeState, Is.EqualTo(QNumberBigInteger.PossibilityPrime.Composite));
 			q = new QNumberBigInteger(BigInteger.Parse("340282366920938463463374607431768211283"));
-			Assert.That(q.IsPrime, Is.EqualTo(true));
+			Assert.That(q.IsPrime, Is.True);
 			Assert.That(q.PossibilityPrimeState, Is.EqualTo(QNumberBigInteger.PossibilityPrime.Prime));
 		}
 
-		[Test]
-		public void TestMod()
+		[TestCase(11, 43, 11)]
+		[TestCase(111, 43, 25)]
+		[TestCase(1111, 43, 36)]
+		[TestCase(-1, 43, 42)]
+		[TestCase(-2, 43, 41)]
+		[TestCase(-43, 43, 0)]
+		[TestCase(-44, 43, 42)]
+		[TestCase(-100, 43, 29)]
+		public void TestMod(Int32 n, Int32 prime, Int32 expect)
 		{
-			var a = new QNumberBigInteger(11);
-			var prime = new QNumberBigInteger(43);
-
-			a = new QNumberBigInteger(11);
-			Assert.That(a.Mod(prime), Is.EqualTo(new QNumberBigInteger(11)));
-			a = new QNumberBigInteger(111);
-			Assert.That(a.Mod(prime), Is.EqualTo(new QNumberBigInteger(25)));
-			a = new QNumberBigInteger(1111);
-			Assert.That(a.Mod(prime), Is.EqualTo(new QNumberBigInteger(36)));
-			a = new QNumberBigInteger(1111);
-			Assert.That(a.Mod(prime), Is.EqualTo(new QNumberBigInteger(36)));
-			a = new QNumberBigInteger(-1);
-			Assert.That(a.Mod(prime), Is.EqualTo(new QNumberBigInteger(42)));
-			a = new QNumberBigInteger(-2);
-			Assert.That(a.Mod(prime), Is.EqualTo(new QNumberBigInteger(41)));
-			a = new QNumberBigInteger(-43);
-			Assert.That(a.Mod(prime), Is.EqualTo(new QNumberBigInteger(0)));
-			a = new QNumberBigInteger(-44);
-			Assert.That(a.Mod(prime), Is.EqualTo(new QNumberBigInteger(42)));
-			a = new QNumberBigInteger(-100);
-			Assert.That(a.Mod(prime), Is.EqualTo(new QNumberBigInteger(29)));
+			var a = new QNumberBigInteger(n);
+			Assert.That(a.Mod(new QNumberBigInteger(prime)), Is.EqualTo(new QNumberBigInteger(expect)));
 		}
-		[Test]
-		public void TestPowMod()
+		[TestCase(11, 1, 43, 11)]
+		[TestCase(11, 2, 43, 35)]
+		[TestCase(11, 42, 43, 1)]
+		[TestCase(11, 43, 43, 11)]
+		[TestCase(11, 44, 43, 35)]
+		[TestCase(11, 90, 43, 4)]
+		[TestCase(11, 130, 43, 21)]
+
+		[TestCase(11, -1, 43, 4)]
+		[TestCase(11, -2, 43, 16)]
+		[TestCase(11, -3, 43, 21)]
+		[TestCase(11, -21, 43, 1)]
+		[TestCase(11, -41, 43, 11)]
+		[TestCase(11, -42, 43, 1)]
+		[TestCase(11, -43, 43, 4)]
+		[TestCase(11, -44, 43, 16)]
+		public void TestPowMod(Int32 n, Int32 exp, Int32 prime, Int32 expect)
 		{
+			var a = new QNumberBigInteger(n);
+			Assert.That(a.PowMod(new QNumberBigInteger(exp), new QNumberBigInteger(prime)), Is.EqualTo(new QNumberBigInteger(expect)));
+			// -1 乗は逆数
+		}
+
+		public void TestInverse(Int32 n)
+		{
+			// 逆数
 			var a = new QNumberBigInteger(11);
 			var prime = new QNumberBigInteger(43);
-
-			a = new QNumberBigInteger(11);
-			Assert.That(a.PowMod(new QNumberBigInteger(0), prime), Is.EqualTo(new QNumberBigInteger(1)));
-			a = new QNumberBigInteger(11);
-			Assert.That(a.PowMod(new QNumberBigInteger(1), prime), Is.EqualTo(new QNumberBigInteger(11)));
-			a = new QNumberBigInteger(11);
-			Assert.That(a.PowMod(new QNumberBigInteger(2), prime), Is.EqualTo(new QNumberBigInteger(35)));
-			a = new QNumberBigInteger(11);
-			Assert.That(a.PowMod(new QNumberBigInteger(42), prime), Is.EqualTo(new QNumberBigInteger(1)));
-			a = new QNumberBigInteger(11);
-			Assert.That(a.PowMod(new QNumberBigInteger(43), prime), Is.EqualTo(new QNumberBigInteger(11)));
-			a = new QNumberBigInteger(11);
-			Assert.That(a.PowMod(new QNumberBigInteger(44), prime), Is.EqualTo(new QNumberBigInteger(35)));
-			a = new QNumberBigInteger(11);
-			Assert.That(a.PowMod(new QNumberBigInteger(90), prime), Is.EqualTo(new QNumberBigInteger(4)));
-			a = new QNumberBigInteger(11);
-			Assert.That(a.PowMod(new QNumberBigInteger(130), prime), Is.EqualTo(new QNumberBigInteger(21)));
-			// -1 乗は逆数
-			a = new QNumberBigInteger(11);
-			Assert.That(a.PowMod(new QNumberBigInteger(-1), prime), Is.EqualTo(new QNumberBigInteger(4)));
-			Assert.That(a.PowMod(new QNumberBigInteger(-2), prime), Is.EqualTo(new QNumberBigInteger(16)));
-			Assert.That(a.PowMod(new QNumberBigInteger(-3), prime), Is.EqualTo(new QNumberBigInteger(21)));
-			Assert.That(a.PowMod(new QNumberBigInteger(-21), prime), Is.EqualTo(new QNumberBigInteger(1)));
-			Assert.That(a.PowMod(new QNumberBigInteger(-41), prime), Is.EqualTo(new QNumberBigInteger(11)));
-			Assert.That(a.PowMod(new QNumberBigInteger(-42), prime), Is.EqualTo(new QNumberBigInteger(1)));
-			Assert.That(a.PowMod(new QNumberBigInteger(-43), prime), Is.EqualTo(new QNumberBigInteger(4)));
-			Assert.That(a.PowMod(new QNumberBigInteger(-44), prime), Is.EqualTo(new QNumberBigInteger(16)));
-			// 逆数
 			Assert.That((a.PowMod(new QNumberBigInteger(-1), prime) * a).Mod(prime), Is.EqualTo(QNumberBigInteger.One));
 			Assert.That((a.PowMod(new QNumberBigInteger(-2), prime) * a * a).Mod(prime), Is.EqualTo(QNumberBigInteger.One));
 			Assert.That((a.PowMod(new QNumberBigInteger(-10), prime) * a.PowMod(new QNumberBigInteger(10), prime)).Mod(prime), Is.EqualTo(QNumberBigInteger.One));
