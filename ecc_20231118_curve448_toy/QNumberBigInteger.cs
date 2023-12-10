@@ -376,7 +376,7 @@ namespace ecc_20231118_curve448_toy
 			return innerValue.ToString(format, provider);
 		}
 
-		public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+		public readonly bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
 		{
 			return innerValue.TryFormat(destination, out charsWritten, format, provider);
 		}
@@ -727,6 +727,27 @@ namespace ecc_20231118_curve448_toy
 			}
 			QNumberBigInteger e = exp.Mod(modulus - One);
 			return new QNumberBigInteger(BigInteger.ModPow(innerValue, e.innerValue, modulus.innerValue));
+		}
+
+
+		/// <summary>
+		/// 暗黙の変換
+		/// </summary>
+		/// <param name="a"></param>
+		public static implicit operator QNumberBigInteger(Int32 a) => new(a);
+		public static implicit operator QNumberBigInteger(Int64 a) => new(a);
+		public static implicit operator QNumberBigInteger(BigInteger a) => new(a);
+
+
+		/// <summary>
+		/// 逆数(素数 prime の剰余類)
+		/// 	a^-1 = a^(p-2) mod p
+		/// </summary>
+		/// <param name="prime">素数</param>
+		/// <returns>素数 prime 剰余類の中での逆数</returns>
+		public readonly QNumberBigInteger Recipro(QNumberBigInteger prime)
+		{
+			return BigInteger.ModPow(innerValue, prime.innerValue - 2, prime.innerValue);
 		}
 
 	}
