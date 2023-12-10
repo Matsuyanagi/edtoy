@@ -670,7 +670,7 @@ namespace ecc_20231118_curve448_toy
 		/// <param name="exp">指数</param>
 		/// <param name="modulus">剰余を求める除数</param>
 		/// <returns>a^exp % modulus</returns>
-		public static QNumberBigInteger ModPow(QNumberBigInteger a, QNumberBigInteger exp, QNumberBigInteger modulus)
+		public static QNumberBigInteger PowMod(QNumberBigInteger a, QNumberBigInteger exp, QNumberBigInteger modulus)
 		{
 			return new QNumberBigInteger(BigInteger.ModPow(a.innerValue, exp.innerValue, modulus.innerValue));
 		}
@@ -720,7 +720,6 @@ namespace ecc_20231118_curve448_toy
 		/// <returns>self^exp % modulus</returns>
 		public readonly QNumberBigInteger PowMod(QNumberBigInteger exp, QNumberBigInteger modulus)
 		{
-			// return new QNumberBigInteger(BigInteger.ModPow(innerValue, exp.innerValue, modulus.innerValue));
 			if (exp == Zero)
 			{
 				return One;
