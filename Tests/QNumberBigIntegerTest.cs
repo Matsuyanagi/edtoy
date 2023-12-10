@@ -372,5 +372,16 @@ namespace Tests
 			Assert.That((a.PowMod(new QNumberBigInteger(-100), prime) * a.PowMod(new QNumberBigInteger(100), prime)).Mod(prime), Is.EqualTo(QNumberBigInteger.One));
 		}
 
+
+		[TestCase(11, 17)]
+		[TestCase(11, 41)]
+		[TestCase(11, 43)]
+		[TestCase(11, 47)]
+		public void Recipro(Int32 a, Int32 prime)
+		{
+			var n = new QNumberBigInteger(a);
+			Assert.That((n.Recipro(prime) * n).Mod(prime), Is.EqualTo(new QNumberBigInteger(1)));
+		}
+
 	}
 }
