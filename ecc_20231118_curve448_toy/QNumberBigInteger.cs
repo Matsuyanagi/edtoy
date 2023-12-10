@@ -749,5 +749,26 @@ namespace ecc_20231118_curve448_toy
 			return BigInteger.ModPow(innerValue, prime.innerValue - 2, prime.innerValue);
 		}
 
+		/// <summary>
+		/// 除算(素数 prime の剰余類)
+		/// 	a / b = ( a * b^-1 ) mod p
+		/// </summary>
+		/// <param name="prime">素数</param>
+		/// <returns>素数 prime 剰余類上での b^-1 乗算</returns>
+		public readonly QNumberBigInteger DivMod(QNumberBigInteger divisor, QNumberBigInteger prime)
+		{
+			return MulMod(divisor.Recipro(prime), prime);
+		}
+
+		/// <summary>
+		/// 乗算 剰余
+		/// </summary>
+		/// <param name="multiplier"></param>
+		/// <param name="prime"></param>
+		/// <returns></returns>
+		public readonly QNumberBigInteger MulMod(QNumberBigInteger multiplier, QNumberBigInteger prime)
+		{
+			return new QNumberBigInteger(innerValue * multiplier).Mod(prime);
+		}
 	}
 }

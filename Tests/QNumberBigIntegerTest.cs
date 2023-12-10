@@ -383,5 +383,27 @@ namespace Tests
 			Assert.That((n.Recipro(prime) * n).Mod(prime), Is.EqualTo(new QNumberBigInteger(1)));
 		}
 
+		[TestCase(8, 2, 17, 4)]
+		[TestCase(11, 11, 17, 1)]
+		[TestCase(110, 2, 17, 4)]
+		[TestCase(1, 8, 47, 6)]
+		public void DivMod(Int32 _a, Int32 _b, Int32 prime, Int32 result)
+		{
+			var a = new QNumberBigInteger(_a);
+			var b = new QNumberBigInteger(_b);
+			Assert.That(a.DivMod(b, prime), Is.EqualTo(new QNumberBigInteger(result)));
+		}
+
+		[TestCase(2, 8, 17, 16)]
+		[TestCase(11, 11, 17, 2)]
+		[TestCase(110, 0, 17, 0)]
+		[TestCase(1, 8, 47, 8)]
+		public void MulMod(Int32 _a, Int32 _b, Int32 prime, Int32 result)
+		{
+			var a = new QNumberBigInteger(_a);
+			var b = new QNumberBigInteger(_b);
+			Assert.That(a.MulMod(b, prime), Is.EqualTo(new QNumberBigInteger(result)));
+		}
+
 	}
 }
