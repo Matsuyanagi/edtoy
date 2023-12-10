@@ -10,10 +10,10 @@ namespace ecc_20231118_curve448_toy
 	/// Affine Point
 	/// アフィン座標点
 	/// </summary>
-	public readonly struct AFPoint(Int64 x, Int64 y) : IEquatable<AFPoint>
+	public readonly struct AFPoint(QNumberBigInteger x, QNumberBigInteger y) : IEquatable<AFPoint>
 	{
-		public QNumberBigInteger X { get; } = new QNumberBigInteger(x);
-		public QNumberBigInteger Y { get; } = new QNumberBigInteger(y);
+		public QNumberBigInteger X { get; } = x;
+		public QNumberBigInteger Y { get; } = y;
 
 		public AFPoint() : this(0, 0)
 		{
@@ -27,5 +27,6 @@ namespace ecc_20231118_curve448_toy
 		public override bool Equals(object? obj) => obj is AFPoint objS && Equals(objS);
 
 		public override int GetHashCode() => X.GetHashCode() + Y.GetHashCode();
+
 	}
 }
