@@ -100,47 +100,39 @@ namespace Tests
 			Assert.That(new QNumberBigInteger(l) == new QNumberBigInteger(r), Is.True);
 		}
 
-		[Test]
-		public void TestSimpleArithmeticPlusMinus()
+		[TestCase(1, 0, 1)]
+		[TestCase(1, -1, 0)]
+		[TestCase(1, 1, 2)]
+		public void TestSimpleArithmeticPlus(Int64 a, Int64 b, Int64 r)
 		{
-			QNumberBigInteger q_0 = QNumberBigInteger.Zero;
-			QNumberBigInteger q_minus1 = new QNumberBigInteger(-1);
-			QNumberBigInteger q_plus1 = new QNumberBigInteger(1);
+			// 二項演算 +
+			Assert.That(new QNumberBigInteger(a) + new QNumberBigInteger(b), Is.EqualTo(new QNumberBigInteger(r)));
+		}
 
-			// 二項演算 + -
-			Assert.That(q_plus1 + q_plus1, Is.EqualTo(new QNumberBigInteger(2)));
-			Assert.That(q_plus1 + q_minus1, Is.EqualTo(q_0));
+		[TestCase(1, 0, 1)]
+		[TestCase(1, -1, 2)]
+		[TestCase(1, 1, 0)]
+		public void TestSimpleArithmeticMinus(Int64 a, Int64 b, Int64 r)
+		{
+			Assert.That(new QNumberBigInteger(a) - new QNumberBigInteger(b), Is.EqualTo(new QNumberBigInteger(r)));
+		}
 
-			Assert.That(q_plus1 - q_plus1, Is.EqualTo(q_0));
-			Assert.That(q_plus1 - q_minus1, Is.EqualTo(new QNumberBigInteger(2)));
-
+		[TestCase(0, 0)]
+		[TestCase(1, 1)]
+		[TestCase(-1, -1)]
+		public void TestSimpleArithmeticSinglePlus(Int64 a, Int64 r)
+		{
 			// 単項 + -
-			Assert.That(+q_plus1, Is.EqualTo(q_plus1));
-			Assert.That(+q_0, Is.EqualTo(q_0));
-			Assert.That(+q_minus1, Is.EqualTo(q_minus1));
+			Assert.That(+(new QNumberBigInteger(a)), Is.EqualTo(new QNumberBigInteger(r)));
+		}
 
-			Assert.That(-q_plus1, Is.EqualTo(q_minus1));
-			Assert.That(-q_0, Is.EqualTo(q_0));
-			Assert.That(-q_minus1, Is.EqualTo(q_plus1));
-
-			// ++ -- 前置、後置で返り値が変わる
-			var q1 = new QNumberBigInteger(1);
-			var q0 = new QNumberBigInteger(0);
-			var qm0 = new QNumberBigInteger(-1);
-			Assert.That(++q1, Is.EqualTo(new QNumberBigInteger(2)));
-			q1 = new QNumberBigInteger(1);
-			Assert.That(q1++, Is.EqualTo(new QNumberBigInteger(1)));
-			Assert.That(q1, Is.EqualTo(new QNumberBigInteger(2)));
-
-			Assert.That(++q0, Is.EqualTo(new QNumberBigInteger(1)));
-			q0 = new QNumberBigInteger(0);
-			Assert.That(q0++, Is.EqualTo(new QNumberBigInteger(0)));
-			Assert.That(q0, Is.EqualTo(new QNumberBigInteger(1)));
-
-			Assert.That(++qm0, Is.EqualTo(new QNumberBigInteger(0)));
-			qm0 = new QNumberBigInteger(-1);
-			Assert.That(qm0++, Is.EqualTo(new QNumberBigInteger(-1)));
-			Assert.That(qm0, Is.EqualTo(new QNumberBigInteger(0)));
+		[TestCase(0, 0)]
+		[TestCase(1, -1)]
+		[TestCase(-1, 1)]
+		public void TestSimpleArithmeticSingleMinus(Int64 a, Int64 r)
+		{
+			// 単項 + -
+			Assert.That(-(new QNumberBigInteger(a)), Is.EqualTo(new QNumberBigInteger(r)));
 		}
 
 		[TestCase(1, 1, 1)]

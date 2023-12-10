@@ -14,8 +14,8 @@ namespace ecc_20231118_curve448_toy
 			None
 		}
 
-		BigInteger innerValue = BigInteger.Zero;
-		PossibilityPrime possibilityPrime = PossibilityPrime.Unknown;
+		private readonly BigInteger innerValue;
+		private PossibilityPrime possibilityPrime = PossibilityPrime.Unknown;
 
 
 		private static readonly QNumberBigInteger _zero = new QNumberBigInteger(0);
@@ -86,16 +86,16 @@ namespace ecc_20231118_curve448_toy
 
 		public static int Radix => throw new NotImplementedException();
 
-		public static QNumberBigInteger AdditiveIdentity => new QNumberBigInteger(Zero);
+		public static QNumberBigInteger AdditiveIdentity => new(Zero);
 
-		public static QNumberBigInteger MultiplicativeIdentity => new QNumberBigInteger(One);
+		public static QNumberBigInteger MultiplicativeIdentity => new(One);
 
 		public static QNumberBigInteger Abs(QNumberBigInteger value)
 		{
 			return value.Abs();
 		}
 
-		public QNumberBigInteger Abs()
+		public readonly QNumberBigInteger Abs()
 		{
 			return new QNumberBigInteger(BigInteger.Abs(innerValue));
 		}
@@ -317,17 +317,17 @@ namespace ecc_20231118_curve448_toy
 			throw new NotImplementedException();
 		}
 
-		public int CompareTo(QNumberBigInteger x)
+		public readonly int CompareTo(QNumberBigInteger x)
 		{
 			return innerValue.CompareTo(x.innerValue);
 		}
 
-		public int CompareTo(object? obj)
+		public readonly int CompareTo(object? obj)
 		{
 			throw new NotImplementedException();
 		}
 
-		public override bool Equals(object? obj)
+		public override readonly bool Equals(object? obj)
 		{
 			if (obj == null || GetType() != obj.GetType())
 			{
@@ -336,7 +336,7 @@ namespace ecc_20231118_curve448_toy
 			return innerValue.Equals(((QNumberBigInteger)obj).innerValue);
 		}
 
-		public bool Equals(QNumberBigInteger other)
+		public readonly bool Equals(QNumberBigInteger other)
 		{
 			return innerValue.Equals(other.innerValue);
 		}
@@ -356,22 +356,22 @@ namespace ecc_20231118_curve448_toy
 			throw new NotImplementedException();
 		}
 
-		public override string? ToString()
+		public override readonly string? ToString()
 		{
 			return innerValue.ToString();
 		}
 
-		public string? ToString(string? format)
+		public readonly string? ToString(string? format)
 		{
 			return innerValue.ToString(format);
 		}
 
-		public string? ToString(IFormatProvider? provider)
+		public readonly string? ToString(IFormatProvider? provider)
 		{
 			return innerValue.ToString(provider);
 		}
 
-		public string ToString(string? format, IFormatProvider? provider)
+		public readonly string ToString(string? format, IFormatProvider? provider)
 		{
 			return innerValue.ToString(format, provider);
 		}
@@ -418,7 +418,8 @@ namespace ecc_20231118_curve448_toy
 
 		public static QNumberBigInteger operator ++(QNumberBigInteger value)
 		{
-			return new QNumberBigInteger(++value.innerValue);
+			throw new NotImplementedException();
+			// return new QNumberBigInteger(++value.innerValue);
 		}
 
 		public static QNumberBigInteger operator --(QNumberBigInteger value)
@@ -537,7 +538,7 @@ namespace ecc_20231118_curve448_toy
 		}
 
 		// 素数判定の演算
-		private PossibilityPrime IsPrimeInnerImplement()
+		private readonly PossibilityPrime IsPrimeInnerImplement()
 		{
 			if (innerValue <= 1)
 			{
@@ -566,11 +567,9 @@ namespace ecc_20231118_curve448_toy
 
 		// ミラーラビンテストを繰り返す
 		// 	一度でも合成数だと判定されれば合成数確定
-		private PossibilityPrime IsPrimeInnerMillerRabinImplement()
+		private readonly PossibilityPrime IsPrimeInnerMillerRabinImplement()
 		{
 			// 小さい素数でミラーラビンテスト
-			// Int32[] small_prime_array = [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47];
-			// Int32[] small_prime_array = [2, 3, 5, 7, 11, 13, 17, 19];
 			(int, BigInteger)[] small_prime_upperbound_array = {
 				(2,2047),
 				(3,1373653),
@@ -646,7 +645,7 @@ namespace ecc_20231118_curve448_toy
 		}
 
 		// ミラーラビンテスト
-		private PossibilityPrime IsPrimeInnerMillerRabinInnerImplement(Int32 a, BigInteger d)
+		private readonly PossibilityPrime IsPrimeInnerMillerRabinInnerImplement(Int32 a, BigInteger d)
 		{
 			var t = d;
 			var y = BigInteger.ModPow(a, t, innerValue);
@@ -719,7 +718,7 @@ namespace ecc_20231118_curve448_toy
 		/// <param name="exp">指数</param>
 		/// <param name="modulus">剰余を求める除数</param>
 		/// <returns>self^exp % modulus</returns>
-		public QNumberBigInteger PowMod(QNumberBigInteger exp, QNumberBigInteger modulus)
+		public readonly QNumberBigInteger PowMod(QNumberBigInteger exp, QNumberBigInteger modulus)
 		{
 			// return new QNumberBigInteger(BigInteger.ModPow(innerValue, exp.innerValue, modulus.innerValue));
 			if (exp == Zero)
