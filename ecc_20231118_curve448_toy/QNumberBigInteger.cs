@@ -770,5 +770,10 @@ namespace ecc_20231118_curve448_toy
 		{
 			return new QNumberBigInteger(innerValue * multiplier).Mod(prime);
 		}
+
+		public readonly QNumberBigInteger AddMod(QNumberBigInteger b, QNumberBigInteger prime)
+		{
+			return new QNumberBigInteger(innerValue + b.innerValue).Mod(prime);
+		}
 	}
 }
