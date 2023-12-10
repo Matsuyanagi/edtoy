@@ -14,6 +14,10 @@
 		{
 		}
 
+		public EHPoint3(AFPoint ap) : this(ap.X, ap.Y, 1)
+		{
+		}
+
 		private static readonly EHPoint3 _identity = new(0, 1, 1);
 		public static EHPoint3 Identity => _identity;
 
