@@ -394,6 +394,18 @@ namespace Tests
 			Assert.That(a.DivMod(b, prime), Is.EqualTo(new QNumberBigInteger(result)));
 		}
 
+		// a / b * b ≡ a (mod prime)
+		[TestCase(111, 5, 43)]
+		[TestCase(3, 5, 47)]
+		[TestCase(22, 5, 47)]
+		[TestCase(15, 8, 47)]
+		public void DivMod2(Int32 _a, Int32 _b, Int32 prime)
+		{
+			var a = new QNumberBigInteger(_a);
+			var b = new QNumberBigInteger(_b);
+			Assert.That(a.DivMod(b, prime).MulMod(b, prime), Is.EqualTo(new QNumberBigInteger(a % prime)));
+		}
+
 		[TestCase(2, 8, 17, 16)]
 		[TestCase(11, 11, 17, 2)]
 		[TestCase(110, 0, 17, 0)]

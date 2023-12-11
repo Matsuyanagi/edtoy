@@ -28,5 +28,14 @@ namespace ecc_20231118_curve448_toy
 
 		public override int GetHashCode() => X.GetHashCode() + Y.GetHashCode();
 
+		public static bool operator ==(AFPoint left, AFPoint right)
+		{
+			return left.X == right.X && left.Y == right.Y;
+		}
+
+		public static bool operator !=(AFPoint left, AFPoint right)
+		{
+			return !(left == right);
+		}
 	}
 }
