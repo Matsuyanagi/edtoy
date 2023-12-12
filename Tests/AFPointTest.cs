@@ -25,8 +25,8 @@ namespace Tests
 		[TestCase(0, 42, 2, 43, 0, 1, 2)]
 		[TestCase(1, 0, 2, 43, 0, 42, 4)]
 		[TestCase(4, 17, 2, 43, 34, 14, 44)]
-		[TestCase(17, 22, 2, 43, 11, 12, 44)]
-		[TestCase(22, 17, 2, 43, 11, 35, 22)]
+		[TestCase(17, 22, 5, 47, 11, 12, 44)]
+		[TestCase(22, 17, 5, 47, 11, 35, 22)]
 		public void TestEdPoint(Int64 x, Int64 y, Int64 d, Int64 prime, Int64 add1_x, Int64 add1_y, Int64 ans_order)
 		{
 			var base_point = new EHPoint3(x, y, 1);
@@ -52,8 +52,47 @@ namespace Tests
 			Assert.That(order, Is.EqualTo(ans_order));
 		}
 
-
-
-
+		[TestCase(0, 1, 2, 43)]
+		[TestCase(0, 42, 2, 43)]
+		[TestCase(1, 0, 2, 43)]
+		[TestCase(2, 5, 2, 43)]
+		[TestCase(2, 38, 2, 43)]
+		[TestCase(5, 41, 2, 43)]
+		[TestCase(9, 14, 2, 43)]
+		[TestCase(17, 4, 2, 43)]
+		[TestCase(22, 25, 2, 43)]
+		[TestCase(41, 38, 2, 43)]
+		[TestCase(42, 0, 2, 43)]
+		[TestCase(0, 1, 5, 47)]
+		[TestCase(0, 46, 5, 47)]
+		[TestCase(1, 0, 5, 47)]
+		[TestCase(6, 8, 5, 47)]
+		[TestCase(6, 39, 5, 47)]
+		[TestCase(11, 12, 5, 47)]
+		[TestCase(12, 36, 5, 47)]
+		[TestCase(30, 25, 5, 47)]
+		[TestCase(39, 41, 5, 47)]
+		[TestCase(41, 39, 5, 47)]
+		[TestCase(46, 0, 5, 47)]
+		public void TestEHPoint3AFPointEdwardsCurveAdd(Int64 x, Int64 y, Int64 d, Int64 prime)
+		{
+			EHPoint3 eh3_base_point = new(x, y, 1);
+			AFPoint afp_base_point = new(x, y);
+			EHPoint3 eh3 = eh3_base_point;
+			AFPoint afp = afp_base_point;
+			int order = 1;
+			for (int i = 0; i < prime * 3; i++)
+			{
+				Assert.That(afp == eh3.ToAFPoint(prime), Is.True);
+				if (afp == AFPoint.Identity)
+				{
+					break;
+				}
+				afp = AFPoint.EdwardsCurveAdd(afp, afp_base_point, d, prime);
+				eh3 = EHPoint3.EdwardsCurveAdd(eh3, eh3_base_point, d, prime);
+				order += 1;
+			}
+			Assert.That(order, Is.LessThan(prime * 3));
+		}
 	}
 }
