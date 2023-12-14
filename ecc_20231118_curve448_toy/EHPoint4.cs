@@ -1,37 +1,29 @@
 ﻿namespace ecc_20231118_curve448_toy
 {
-	public readonly struct EHPoint4(QNumberBigInteger x, QNumberBigInteger y, QNumberBigInteger z, QNumberBigInteger prime) : IEquatable<EHPoint4>
+	public readonly struct EHPoint4(QNumberBigInteger x, QNumberBigInteger y, QNumberBigInteger z, QNumberBigInteger t, QNumberBigInteger prime) : IEquatable<EHPoint4>
 	{
 		public QNumberBigInteger X { get; } = x;
 		public QNumberBigInteger Y { get; } = y;
 		public QNumberBigInteger Z { get; } = z;
-		public QNumberBigInteger T { get; } = x.MulMod(y, prime);
+		public QNumberBigInteger T { get; } = t;
 
 		public QNumberBigInteger Prime { get; } = prime;
-
-		public EHPoint4() : this(0, 0, 1, 0)
-		{
-		}
 
 		public EHPoint4(AFPoint ap, QNumberBigInteger prime) : this(ap.X, ap.Y, 1, prime)
 		{
 		}
 
-		public EHPoint4(QNumberBigInteger x, QNumberBigInteger y, QNumberBigInteger z, QNumberBigInteger t, QNumberBigInteger prime) : this(x,y,z,prime)
+		public EHPoint4(QNumberBigInteger x, QNumberBigInteger y, QNumberBigInteger z, QNumberBigInteger prime) : this(x, y, z, x.MulMod(y, prime), prime)
 		{
-			T = t;
 		}
-
-		private static readonly EHPoint4 _identity = new(0, 1, 1, 0);
-		public static EHPoint4 Identity => _identity;
 
 		public override string ToString() => $"({X},{Y},{Z},{T})";
 
-		public bool Equals(EHPoint4 other) => X == other.X && Y == other.Y && Z == other.Z && T == other.T;
+		public bool Equals(EHPoint4 other) => X == other.X && Y == other.Y && Z == other.Z && T == other.T && Prime == other.Prime;
 
 		public override bool Equals(object? obj) => obj is EHPoint4 objS && Equals(objS);
 
-		public override int GetHashCode() => X.GetHashCode() + Y.GetHashCode() + Z.GetHashCode() + Y.GetHashCode();
+		public override int GetHashCode() => X.GetHashCode() + Y.GetHashCode() + Z.GetHashCode() + Y.GetHashCode() + Prime.GetHashCode();
 
 		public AFPoint ToAFPoint() => new(X.DivMod(Z, Prime), Y.DivMod(Z, Prime));
 
@@ -43,9 +35,9 @@
 
 			var A = p1.X.MulMod(p2.X, prime);
 			var B = p1.Y.MulMod(p2.Y, prime);
-			var C = p1.T.MulMod(p2.T, prime).MulMod(d,prime);
+			var C = p1.T.MulMod(p2.T, prime).MulMod(d, prime);
 			var D = p1.Z.MulMod(p2.Z, prime);
-			var E = p1.X.AddMod(p1.Y, prime).MulMod(p2.X.AddMod(p2.Y, prime),prime).AddMod(-B, prime).AddMod(-A, prime);
+			var E = p1.X.AddMod(p1.Y, prime).MulMod(p2.X.AddMod(p2.Y, prime), prime).AddMod(-B, prime).AddMod(-A, prime);
 			var F = D.AddMod(-C, prime);
 			var G = D.AddMod(C, prime);
 			var H = B.AddMod(-(a.MulMod(A, prime)), prime);
