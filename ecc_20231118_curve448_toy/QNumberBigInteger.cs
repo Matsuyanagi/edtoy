@@ -757,6 +757,10 @@ namespace ecc_20231118_curve448_toy
 		/// <returns>素数 prime 剰余類上での b^-1 乗算</returns>
 		public readonly QNumberBigInteger DivMod(QNumberBigInteger divisor, QNumberBigInteger prime)
 		{
+			if (divisor == One)
+			{
+				return new QNumberBigInteger(innerValue).Mod(prime);
+			}
 			return MulMod(divisor.Recipro(prime), prime);
 		}
 
@@ -768,11 +772,23 @@ namespace ecc_20231118_curve448_toy
 		/// <returns></returns>
 		public readonly QNumberBigInteger MulMod(QNumberBigInteger multiplier, QNumberBigInteger prime)
 		{
+			if (multiplier == One)
+			{
+				return new QNumberBigInteger(innerValue).Mod(prime);
+			}
+			if (multiplier == Zero)
+			{
+				return Zero;
+			}
 			return new QNumberBigInteger(innerValue * multiplier).Mod(prime);
 		}
 
 		public readonly QNumberBigInteger AddMod(QNumberBigInteger b, QNumberBigInteger prime)
 		{
+			if (b == Zero)
+			{
+				return new QNumberBigInteger(innerValue).Mod(prime);
+			}
 			return new QNumberBigInteger(innerValue + b.innerValue).Mod(prime);
 		}
 	}
