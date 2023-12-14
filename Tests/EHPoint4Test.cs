@@ -17,14 +17,14 @@ namespace Tests
 		[TestCase(100, 10, 8, 19, 3, 6)]
 		public void TestToAFPoint(Int64 x, Int64 y, Int64 z, Int64 prime, Int64 ax, Int64 ay)
 		{
-			Assert.That(new EHPoint4(x, y, z, prime).ToAFPoint(prime), Is.EqualTo(new AFPoint(ax, ay)));
+			Assert.That(new EHPoint4(x, y, z, prime).ToAFPoint(), Is.EqualTo(new AFPoint(ax, ay)));
 		}
 
 		[TestCase(100, 10, 47, 100, 10, 1)]
 		[TestCase(-10, -1, 47, -10, -1, 1)]
 		public void TestFromAFPoint(Int64 ax, Int64 ay, Int64 prime, Int64 x, Int64 y, Int64 z)
 		{
-			Assert.That(new EHPoint4(new AFPoint(ax, ay), prime), Is.EqualTo(new EHPoint4(x, y, 1, prime)));
+			Assert.That(new EHPoint4(new AFPoint(ax, ay), prime), Is.EqualTo(new EHPoint4(x, y, z, prime)));
 		}
 	}
 }

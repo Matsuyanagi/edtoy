@@ -28,7 +28,7 @@
 
 		public override int GetHashCode() => X.GetHashCode() + Y.GetHashCode() + Z.GetHashCode() + Y.GetHashCode();
 
-		public AFPoint ToAFPoint(QNumberBigInteger prime) => new(X.DivMod(Z, prime), Y.DivMod(Z, prime));
+		public AFPoint ToAFPoint() => new(X.DivMod(Z, Prime), Y.DivMod(Z, Prime));
 
 
 		public static EHPoint4 EdwardsCurveAdd(EHPoint4 p1, EHPoint4 p2, QNumberBigInteger a, QNumberBigInteger d)
