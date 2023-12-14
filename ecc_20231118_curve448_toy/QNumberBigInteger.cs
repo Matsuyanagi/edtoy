@@ -693,7 +693,7 @@ namespace ecc_20231118_curve448_toy
 		/// <returns></returns>
 		public QNumberBigInteger Mod(QNumberBigInteger modulus)
 		{
-			if (this > modulus)
+			if (this >= modulus)
 			{
 				return this % modulus;
 			}
