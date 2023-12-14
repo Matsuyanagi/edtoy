@@ -13,7 +13,7 @@
 		{
 		}
 
-		public EHPoint4(AFPoint ap, QNumberBigInteger prime) : this(ap.X, ap.Y, 1, ap.X.MulMod(ap.Y, prime))
+		public EHPoint4(AFPoint ap, QNumberBigInteger prime) : this(ap.X, ap.Y, 1, prime)
 		{
 		}
 
