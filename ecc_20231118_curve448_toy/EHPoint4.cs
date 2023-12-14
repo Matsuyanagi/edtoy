@@ -17,6 +17,11 @@
 		{
 		}
 
+		public EHPoint4(QNumberBigInteger x, QNumberBigInteger y, QNumberBigInteger z, QNumberBigInteger t, QNumberBigInteger prime) : this(x,y,z,prime)
+		{
+			T = t;
+		}
+
 		private static readonly EHPoint4 _identity = new(0, 1, 1, 0);
 		public static EHPoint4 Identity => _identity;
 
@@ -35,40 +40,20 @@
 		{
 			// https://hyperelliptic.org/EFD/g1p/auto-twisted-extended.html
 			var prime = p1.Prime;
-/* 			var A = p1.X.MulMod(p2.X, prime);
-			var B = p1.Y.MulMod(p2.Y, prime);
-			var C = p1.Z.MulMod(p2.T, prime);
-			var D = p1.T.MulMod(p2.Z, prime);
-			var E = D.AddMod(C, prime);
-			var F = p1.X.AddMod(-p1.Y, prime).MulMod(p2.X.AddMod(p2.Y, prime),prime).AddMod(B, prime).AddMod(-A, prime);
-			var G = B.AddMod(a.MulMod(A, prime), prime);
-			var H = D.AddMod(-C, prime);
 
-			var px = E.MulMod(F, prime);
-			var py = G.MulMod(H, prime);
-			var pz = F.MulMod(G, prime);
-			return new EHPoint4(px, py, pz, prime);
-
- */			
 			var A = p1.X.MulMod(p2.X, prime);
 			var B = p1.Y.MulMod(p2.Y, prime);
 			var C = p1.T.MulMod(p2.T, prime).MulMod(d,prime);
 			var D = p1.Z.MulMod(p2.Z, prime);
 			var E = p1.X.AddMod(p1.Y, prime).MulMod(p2.X.AddMod(p2.Y, prime),prime).AddMod(-B, prime).AddMod(-A, prime);
-
-			// var E = D.AddMod(C, prime);
-			// var F = p1.X.AddMod(-p1.Y, prime).MulMod(p2.X.AddMod(p2.Y, prime),prime).AddMod(B, prime).AddMod(-A, prime);
-			// var F = p1.X.AddMod(-p1.Y, prime).MulMod(p2.X.AddMod(p2.Y, prime),prime).AddMod(B, prime).AddMod(-A, prime);
 			var F = D.AddMod(-C, prime);
 			var G = D.AddMod(C, prime);
-			var H = B.AddMod(-a.MulMod(A, prime), prime);
-			// var H = D.AddMod(-C, prime);
-
+			var H = B.AddMod(-(a.MulMod(A, prime)), prime);
 			var px = E.MulMod(F, prime);
 			var py = G.MulMod(H, prime);
 			var pz = F.MulMod(G, prime);
-			return new EHPoint4(px, py, pz, prime);
-
+			var pt = E.MulMod(H, prime);
+			return new EHPoint4(px, py, pz, pt, prime);
 		}
 
 		public static bool operator ==(EHPoint4 left, EHPoint4 right)
