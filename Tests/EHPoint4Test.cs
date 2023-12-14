@@ -4,9 +4,9 @@ namespace Tests
 {
 	internal class EHPoint4Test
 	{
-		[TestCase(0, 1, 1, 0, "(0,1,1,0)")]
-		[TestCase(0, 2, 2, 0, "(0,2,2,0)")]
-		[TestCase(-1, -100, -10, 100, "(-1,-100,-10,100)")]
+		[TestCase(0, 1, 1, 43, "(0,1,1,0)")]
+		[TestCase(0, 2, 2, 43, "(0,2,2,0)")]
+		[TestCase(-1, -100, -10, 43, "(-1,-100,-10,14)")]
 		public void TestEqualString(Int64 x, Int64 y, Int64 z, Int64 prime, string s)
 		{
 			Assert.That(new EHPoint4(x, y, z, prime).ToString(), Is.EqualTo(s));
