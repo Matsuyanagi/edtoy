@@ -47,15 +47,37 @@ def add_edwards_curve_point( point1, point2, d, prime )
 	x2 = point2.x
 	y2 = point2.y
 	
-	top = ( x1 * y2 + y1 * x2 ) % prime
-	bottom = ( 1 + d * x1 * x2 * y1 * y2 ) % prime
-	inv_bottom = bottom.to_bn.mod_exp( prime-2, prime ).to_i
-	x3 = ( top * inv_bottom ) % prime
+	x1y1 = x1 * x2
+	y1y2 = y1 * y2
+	dx1y1x2y2 = d * x1y1 * y1y2
+	top = ( ( x1 * y2 + y1 * x2 ) % prime ).to_bn
+	inv_bottom = ( 1 + dx1y1x2y2 ).to_bn.mod_inverse( prime )
+	x3 = top.mod_mul( inv_bottom, prime )
 
-	top = ( y1 * y2 - x1 * x2 ) % prime
-	bottom = ( 1 - d * x1 * x2 * y1 * y2 ) % prime
-	inv_bottom = bottom.to_bn.mod_exp( prime-2, prime ).to_i
-	y3 = ( top * inv_bottom ) % prime
+	top = ( ( y1y2 - x1x2 ) % prime ).to_bn
+	inv_bottom = ( 1 - dx1y1x2y2 ).to_bn.mod_inverse( prime )
+	y3 = top.mod_mul( inv_bottom, prime )
+
+	Ed25519Point.new( x3, y3 )
+end
+
+# Twisted Ed25519Point
+def add_twisted_edwards_curve_point( point1, point2, a, d, prime )
+	x1 = point1.x
+	y1 = point1.y
+	x2 = point2.x
+	y2 = point2.y
+	
+	x1y1 = x1 * x2
+	y1y2 = y1 * y2
+	dx1y1x2y2 = d * x1y1 * y1y2
+	top = ( ( x1 * y2 + y1 * x2 ) % prime ).to_bn
+	inv_bottom = ( ( 1 + dx1y1x2y2 ).to_bn % prime ).mod_inverse( prime )
+	x3 = top.mod_mul( inv_bottom, prime )
+
+	top = ( ( y1y2 - a * x1y1 ) % prime ).to_bn
+	inv_bottom = ( ( 1 - dx1y1x2y2 ).to_bn % prime ).mod_inverse( prime )
+	y3 = top.mod_mul( inv_bottom, prime )
 
 	Ed25519Point.new( x3, y3 )
 end
@@ -77,7 +99,7 @@ def init(prime)
 		# 平方テーブルを作る
 		$square_table[a] = (a * a) % prime
 		# 逆数テーブルを作る
-		$recipro_table[a] = a.to_bn.mod_exp(prime-2,prime).to_i
+		$recipro_table[a] = a.to_bn.mod_inverse(prime).to_i
 	end
 	# 平方テーブルの逆が平方根テーブル
 	$square_table.each do |k,v|
@@ -96,8 +118,10 @@ end
 
 def main
 	# prime = 43
+	# a = 1
 	# d = 2
 	prime = 47
+	a = 6
 	d = 5
 	points = []
 	def points.pretty_inspect
@@ -113,7 +137,7 @@ def main
 	# x = 1 .. prime-1
 	# y2 から力技で曲線上の (1,y),(2,y),(3,y),... を探す
 	(0...prime).each do |x|
-		y2 = ( (1-x*x)%prime * recipro( (1-d*x*x)%prime, prime ) ) % prime
+		y2 = ( (1-a*x*x)%prime * recipro( (1-d*x*x), prime ) ) % prime
 		y_arr = sqrt( y2, prime )
 		next if y_arr.nil?
 		
@@ -125,8 +149,12 @@ def main
 	end
 	points.uniq!
 
+	puts( "素数 : #{prime}" )
+	puts( "d : #{d}" )
+	puts( "a : #{a}" )
+
 	puts( "平方テーブル : #{$square_table.pretty_inspect}" )
-	puts( "平方根テーブル : #{$sqrt_table.pretty_inspect}" )
+	puts( "平方根テーブル : #{$sqrt_table.to_a.sort.pretty_inspect}" )
 	puts( "非平方剰余数(d候補) : #{$no_sqrt_table.pretty_inspect}" )
 	puts( "逆数テーブル : #{$recipro_table.pretty_inspect}" )
 	puts( "曲線上の点 : #{points.pretty_inspect}" )
@@ -142,7 +170,8 @@ def main
 		(prime*2).times do |n|
 			edwards_curve_points << p
 			break if p == o_point
-			p = add_edwards_curve_point( p, point, d, prime )
+			# p = add_edwards_curve_point( p, point, d, prime )
+			p = add_twisted_edwards_curve_point( p, point, a, d, prime )
 		end
 		
 		# 出力
