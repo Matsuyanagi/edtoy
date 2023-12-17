@@ -117,8 +117,11 @@ end
 
 
 def main
-	# prime = 43
+	# prime = 41
 	# a = 1
+	# d = 3
+	# prime = 43
+	# a = 6
 	# d = 2
 	prime = 47
 	a = 6
