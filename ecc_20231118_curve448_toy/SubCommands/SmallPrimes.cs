@@ -5,6 +5,8 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
+using ecc_20231118_curve448_toy.CommandLineOptions;
+
 namespace ecc_20231118_curve448_toy.SubCommands
 {
 	public static class SmallPrimes
@@ -65,6 +67,37 @@ namespace ecc_20231118_curve448_toy.SubCommands
 			}
 
 			return prime_numbers;
+		}
+
+		public static void Run(COSmallPrime option)
+		{
+			var prime_number_list = SmallPrimeNumberList();
+			if (option.Length > 0)
+			{
+				int n = option.Length;
+
+				var start_index = prime_number_list.BinarySearch(1 << (n - 1));
+				if (start_index < 0)
+				{
+					start_index = ~start_index;
+				}
+				var end_index = prime_number_list.BinarySearch(1 << n);
+				if (end_index < 0)
+				{
+					end_index = ~end_index;
+				}
+				for (int i = start_index; i < end_index; i++)
+				{
+					Console.WriteLine(prime_number_list[i]);
+				}
+			}
+			else
+			{
+				foreach (var prime in prime_number_list)
+				{
+					Console.WriteLine(prime);
+				}
+			}
 		}
 	}
 }

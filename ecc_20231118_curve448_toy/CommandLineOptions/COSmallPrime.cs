@@ -8,7 +8,9 @@ using CommandLine;
 namespace ecc_20231118_curve448_toy.CommandLineOptions
 {
 	[Verb("smallprime", HelpText = "Small prime number list (<65536)")]
-	internal class COSmallPrime
+	public class COSmallPrime
 	{
+		[Option('l', "length", Default = 0, Required = false, HelpText = "Bit Length")]
+		public int Length { get; set; }
 	}
 }
