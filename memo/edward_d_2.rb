@@ -117,15 +117,15 @@ end
 
 
 def main
-	# prime = 41
-	# a = 1
-	# d = 3
+	prime = 41
+	a = 23
+	d = 19
 	# prime = 43
 	# a = 6
 	# d = 2
-	prime = 47
-	a = 6
-	d = 5
+	# prime = 47
+	# a = 6
+	# d = 5
 	points = []
 	def points.pretty_inspect
 		s = "[\n"

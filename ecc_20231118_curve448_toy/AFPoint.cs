@@ -51,5 +51,19 @@ namespace ecc_20231118_curve448_toy
 			var y3 = C.AddMod(-D, prime).DivMod(G, prime);              // (y1y2-x1x2)/(1-dx1x2y1y2)
 			return new AFPoint(x3, y3);
 		}
+
+		public static AFPoint EdwardsCurveAdd(AFPoint p1, AFPoint p2, QNumberBigInteger a, QNumberBigInteger d, QNumberBigInteger prime)
+		{
+			var A = p1.X.MulMod(p2.Y, prime);   // x1y2
+			var B = p1.Y.MulMod(p2.X, prime);   // y1x2
+			var C = p1.Y.MulMod(p2.Y, prime);   // y1y2
+			var D = p1.X.MulMod(p2.X, prime).MulMod(a, prime);   // ax1x2
+			var E = d.MulMod(A, prime).MulMod(B, prime);                // dx1x2y1y2
+			var F = new QNumberBigInteger(1).AddMod(E, prime);          // 1+dx1x2y1y2
+			var G = new QNumberBigInteger(1).AddMod(-E, prime);         // 1-dx1x2y1y2
+			var x3 = A.AddMod(B, prime).DivMod(F, prime);               // (x1y2+y1x2)/(1+dx1x2y1y2)
+			var y3 = C.AddMod(-D, prime).DivMod(G, prime);              // (y1y2-ax1x2)/(1-dx1x2y1y2)
+			return new AFPoint(x3, y3);
+		}
 	}
 }

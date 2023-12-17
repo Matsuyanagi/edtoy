@@ -117,6 +117,15 @@ namespace Tests
 		[TestCase(39, 41, 1, 5, 47)]
 		[TestCase(41, 39, 1, 5, 47)]
 		[TestCase(46, 0, 1, 5, 47)]
+		[TestCase(2, 34, 4, 5, 47)]
+		[TestCase(4, 20, 4, 5, 47)]
+		[TestCase(21, 25, 4, 5, 47)]
+		[TestCase(22, 0, 4, 2, 43)]
+		[TestCase(26, 33, 4, 2, 43)]
+		[TestCase(29, 20, 4, 2, 43)]
+		[TestCase(15, 3, 23, 19, 41)]
+		[TestCase(20, 2, 23, 19, 41)]
+		[TestCase(35, 15, 23, 19, 41)]
 		public void TestEHPoint4AFPointEdwardsCurveAdd(Int64 x, Int64 y, Int64 a, Int64 d, Int64 prime)
 		{
 			EHPoint4 eh4_base_point = new(x, y, 1, prime);
@@ -131,7 +140,7 @@ namespace Tests
 				{
 					break;
 				}
-				afp = AFPoint.EdwardsCurveAdd(afp, afp_base_point, d, prime);
+				afp = AFPoint.EdwardsCurveAdd(afp, afp_base_point, a, d, prime);
 				eh4 = EHPoint4.EdwardsCurveAdd(eh4, eh4_base_point, a, d);
 				order += 1;
 			}
