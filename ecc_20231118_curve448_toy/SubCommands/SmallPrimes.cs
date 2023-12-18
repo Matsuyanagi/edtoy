@@ -71,32 +71,39 @@ namespace ecc_20231118_curve448_toy.SubCommands
 
 		public static void Run(COSmallPrime option)
 		{
+			// 素数リスト作成
 			var prime_number_list = SmallPrimeNumberList();
+			var start_index = 0;
+			var end_index = prime_number_list.Count;
 			if (option.Length > 0)
 			{
+				// 素数リストの一部、ビット数が一致する部分を出力
 				int n = option.Length;
 
-				var start_index = prime_number_list.BinarySearch(1 << (n - 1));
+				start_index = prime_number_list.BinarySearch(1 << (n - 1));
 				if (start_index < 0)
 				{
 					start_index = ~start_index;
 				}
-				var end_index = prime_number_list.BinarySearch(1 << n);
+				end_index = prime_number_list.BinarySearch(1 << n);
 				if (end_index < 0)
 				{
 					end_index = ~end_index;
 				}
-				for (int i = start_index; i < end_index; i++)
-				{
-					Console.WriteLine(prime_number_list[i]);
-				}
 			}
-			else
+			// 素数リストを出力
+			var number = option.Number;
+			for (int i = start_index; i < end_index; i++)
 			{
-				foreach (var prime in prime_number_list)
+				if (number >= 0)
 				{
-					Console.WriteLine(prime);
+					if (number == 0)
+					{
+						break;
+					}
+					number -= 1;
 				}
+				Console.WriteLine(prime_number_list[i]);
 			}
 		}
 	}
