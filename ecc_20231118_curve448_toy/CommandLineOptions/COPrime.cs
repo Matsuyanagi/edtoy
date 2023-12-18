@@ -19,10 +19,10 @@ namespace ecc_20231118_curve448_toy.CommandLineOptions
 		[Option('s', "strong", Required = false, Default = false, HelpText = "Strong Prime (4n+3)")]
 		public bool Strong { get; set; }
 
-		[Option('3', "n4_3", Required = false, Default = false, HelpText = "4n+3 type")]
+		[Option("n4_3", Required = false, Default = false, HelpText = "4n+3 type")]
 		public bool N4_3 { get; set; }
 
-		[Option('1', "n4_1", Required = false, Default = false, HelpText = "4n+1 type")]
+		[Option("n4_1", Required = false, Default = false, HelpText = "4n+1 type")]
 		public bool N4_1 { get; set; }
 
 	}

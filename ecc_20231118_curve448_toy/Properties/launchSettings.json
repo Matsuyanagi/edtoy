@@ -2,7 +2,7 @@
   "profiles": {
     "ecc_20231118_curve448_toy": {
       "commandName": "Project",
-      "commandLineArgs": "smallprime\r\n-l5"
+      "commandLineArgs": "prime\r\n-l5"
     }
   }
 }

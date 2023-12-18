@@ -84,6 +84,11 @@ namespace ecc_20231118_curve448_toy
 			innerValue = (BigInteger)x;
 		}
 
+		public QNumberBigInteger(byte[] b)
+		{
+			innerValue = new BigInteger(b);
+		}
+
 		public static int Radix => throw new NotImplementedException();
 
 		public static QNumberBigInteger AdditiveIdentity => new(Zero);
