@@ -9,7 +9,7 @@ namespace ecc_20231118_curve448_toy
 		static void Main(string[] args)
 		{
 			Parser.Default.ParseArguments<COPrime, COSmallPrime>(args)
-				.WithParsed<COPrime>(opt => { })
+				.WithParsed<COPrime>(opt => { CreatePrimeNumber.Run(opt); })
 				.WithParsed<COSmallPrime>(opt => { SmallPrimes.Run(opt); })
 				.WithNotParsed(err => { });
 		}
