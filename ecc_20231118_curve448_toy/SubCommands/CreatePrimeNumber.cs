@@ -21,7 +21,7 @@ namespace ecc_20231118_curve448_toy.SubCommands
 				var prime_number = CreateFakePrimeRandomBit(option, random, bytes);
 				while (!prime_number.IsPrime)
 				{
-					prime_number = CreateFakePrimeRandomBit(option, random, bytes);
+					prime_number = CreateFakePrimeRandomBitNextPlus4(option, random, bytes, prime_number);
 				}
 				Console.WriteLine("10 : {0}", prime_number);
 				// Console.WriteLine("0x : {0:X}", prime_number);
@@ -87,6 +87,25 @@ namespace ecc_20231118_curve448_toy.SubCommands
 			}
 
 			QNumberBigInteger prime_number = new QNumberBigInteger(bytes);
+			return prime_number;
+		}
+
+		/// <summary>
+		/// 次の素数候補を求める
+		/// </summary>
+		/// <param name="option">コマンドライン引数</param>
+		/// <param name="random">乱数発生器</param>
+		/// <param name="bytes">バイトバッファ</param>
+		/// <param name="prime_number"></param>
+		/// <returns>指定のビット長を持つ奇数。素数判定はしていない</returns>
+		public static QNumberBigInteger CreateFakePrimeRandomBitNextPlus4(COPrime option, Random random, byte[] bytes, QNumberBigInteger prime_number)
+		{
+			prime_number += 4;
+			if ((prime_number & (1 << (option.Length-1))) == 0)
+			{
+				// 繰り上がりがあったら乱数で生成し直し
+				prime_number = CreateFakePrimeRandomBit(option, random, bytes);
+			}
 			return prime_number;
 		}
 

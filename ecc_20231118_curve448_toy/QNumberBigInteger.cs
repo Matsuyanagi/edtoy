@@ -575,7 +575,7 @@ namespace ecc_20231118_curve448_toy
 		private readonly PossibilityPrime IsPrimeInnerMillerRabinImplement()
 		{
 			// 小さい素数でミラーラビンテスト
-			(int, BigInteger)[] small_prime_upperbound_array = {
+			(UInt64, BigInteger)[] small_prime_upperbound_array = {
 				(2,2047),
 				(3,1373653),
 				(5,25326001),
@@ -600,19 +600,11 @@ namespace ecc_20231118_curve448_toy
 
 			// 判定に使う innerValue から求まる d
 			var d = innerValue - 1;
-			while (d.IsEven)
-			{
-				d >>= 1;
-			}
+			var trail_zero = BigInteger.TrailingZeroCount( d );
+			d >>= (int)trail_zero;
 
 			foreach (var (n, upper) in small_prime_upperbound_array)
 			{
-				if (BigInteger.GreatestCommonDivisor(n, innerValue) != BigInteger.One)
-				{
-					// 最大公約数1以外を持つ。約数を持っているので合成数
-					return PossibilityPrime.Composite;
-				}
-
 				// ミラーラビンテスト1つの元に対しての判定
 				if (IsPrimeInnerMillerRabinInnerImplement(n, d) == PossibilityPrime.Composite)
 				{
@@ -631,14 +623,15 @@ namespace ecc_20231118_curve448_toy
 			// 繰返し回数 : 間違う確率が 4^-k だとして、ビット長の 1/2 回以上繰り返す
 			var bit_length = innerValue.GetBitLength();
 			var loop_count = (bit_length >> 1) + 5;
+			Int64 random_max = 0x0fff_ffff_ffff_ffff + 41L;
+			if ((BigInteger)random_max > (innerValue-1)>>1)
+			{
+				random_max = (Int64)((innerValue-1)>>1);
+			}
 			for (int i = 0; i < loop_count; i++)
 			{
-				var random = randomgen.Next(41, 0x0fff_ffff + 41);
-				if (BigInteger.GreatestCommonDivisor(random, innerValue) != BigInteger.One)
-				{
-					// 最大公約数1以外を持つ。約数を持っているので合成数
-					return PossibilityPrime.Composite;
-				}
+				UInt64 random = (UInt64)randomgen.NextInt64(41L, random_max);
+
 				if (IsPrimeInnerMillerRabinInnerImplement(random, d) == PossibilityPrime.Composite)
 				{
 					return PossibilityPrime.Composite;
@@ -650,7 +643,7 @@ namespace ecc_20231118_curve448_toy
 		}
 
 		// ミラーラビンテスト
-		private readonly PossibilityPrime IsPrimeInnerMillerRabinInnerImplement(Int32 a, BigInteger d)
+		private readonly PossibilityPrime IsPrimeInnerMillerRabinInnerImplement(UInt64 a, BigInteger d)
 		{
 			var t = d;
 			var y = BigInteger.ModPow(a, t, innerValue);
