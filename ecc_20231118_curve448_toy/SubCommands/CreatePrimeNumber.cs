@@ -24,8 +24,8 @@ namespace ecc_20231118_curve448_toy.SubCommands
 					prime_number = CreateFakePrimeRandomBit(option, random, bytes);
 				}
 				Console.WriteLine("10 : {0}", prime_number);
-				Console.WriteLine("0x : {0:X}", prime_number);
-				Console.WriteLine("0x : {0:B}", prime_number);
+				// Console.WriteLine("0x : {0:X}", prime_number);
+				// Console.WriteLine("0x : {0:B}", prime_number);
 			}
 		}
 
