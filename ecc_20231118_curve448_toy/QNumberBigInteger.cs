@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace ecc_20231118_curve448_toy
 {
-	public struct QNumberBigInteger : IBinaryInteger<QNumberBigInteger>
+	public readonly struct QNumberBigInteger : IBinaryInteger<QNumberBigInteger>
 	{
 		public enum PossibilityPrime
 		{
@@ -15,8 +15,6 @@ namespace ecc_20231118_curve448_toy
 		}
 
 		private readonly BigInteger innerValue;
-		private PossibilityPrime possibilityPrime = PossibilityPrime.Unknown;
-
 
 		private static readonly QNumberBigInteger _zero = new QNumberBigInteger(0);
 		private static readonly QNumberBigInteger _one = new QNumberBigInteger(1);
@@ -31,7 +29,6 @@ namespace ecc_20231118_curve448_toy
 		public QNumberBigInteger(QNumberBigInteger x)
 		{
 			innerValue = x.innerValue;
-			possibilityPrime = x.possibilityPrime;
 		}
 
 		public QNumberBigInteger(Int32 x)
@@ -508,40 +505,11 @@ namespace ecc_20231118_curve448_toy
 		}
 
 		/** 素数判定
-		  * 	判定の結果は possibilityPrime にキャッシュしておき、キャッシュがあれば使う。
-		  *	キャッシュがない場合は素数判定演算をする
 		  *
 		  */
-		public bool IsPrime
-		{
-			get
-			{
-				if (possibilityPrime != PossibilityPrime.Unknown)
-				{
-					// すでに素数判定の結果があるなら素数かどうかを返す
-					return possibilityPrime == PossibilityPrime.Prime;
-				}
-				possibilityPrime = IsPrimeInnerImplement();
-
-				return possibilityPrime == PossibilityPrime.Prime;
-			}
-		}
+		public bool IsPrime => IsPrimeInnerImplement() == PossibilityPrime.Prime;
 
 		// 素数、合成数、それ以外(0,1,マイナス)
-		public PossibilityPrime PossibilityPrimeState
-		{
-			get
-			{
-				if (possibilityPrime != PossibilityPrime.Unknown)
-				{
-					// すでに素数判定の結果があるなら素数かどうかを返す
-					return possibilityPrime;
-				}
-				possibilityPrime = IsPrimeInnerImplement();
-				return possibilityPrime;
-			}
-		}
-
 		// 素数判定の演算
 		private readonly PossibilityPrime IsPrimeInnerImplement()
 		{
@@ -587,20 +555,21 @@ namespace ecc_20231118_curve448_toy
 				(23,3825123056546413051),
 				(29,3825123056546413051),
 				(31,3825123056546413051),
-				(37,BigInteger.Parse("318665857834031151167461")),
-				(41,BigInteger.Parse("3317044064679887385961981")),
-				(43,BigInteger.Parse("6003094289670105800312596501")),
-				(47,BigInteger.Parse("59276361075595573263446330101")),
-				(53,BigInteger.Parse("564132928021909221014087501701")),
-				(59,BigInteger.Parse("564132928021909221014087501701")),
-				(61,BigInteger.Parse("1543267864443420616877677640751301")),
-				(67,BigInteger.Parse("1543267864443420616877677640751301")),
-				(71,BigInteger.Parse("100000000000000000000000000000000000")),
+				(31,3825123056546413051),
+				(37,3825123056546413051),
+				(41,3825123056546413051),
+				(43,3825123056546413051),
+				(47,3825123056546413051),
+				(53,3825123056546413051),
+				(59,3825123056546413051),
+				(61,3825123056546413051),
+				(67,3825123056546413051),
+				(71,3825123056546413051),
 			};
 
 			// 判定に使う innerValue から求まる d
 			var d = innerValue - 1;
-			var trail_zero = BigInteger.TrailingZeroCount( d );
+			var trail_zero = BigInteger.TrailingZeroCount(d);
 			d >>= (int)trail_zero;
 
 			foreach (var (n, upper) in small_prime_upperbound_array)
@@ -624,9 +593,9 @@ namespace ecc_20231118_curve448_toy
 			var bit_length = innerValue.GetBitLength();
 			var loop_count = (bit_length >> 1) + 5;
 			Int64 random_max = 0x0fff_ffff_ffff_ffff + 41L;
-			if ((BigInteger)random_max > (innerValue-1)>>1)
+			if ((BigInteger)random_max > (innerValue - 1) >> 1)
 			{
-				random_max = (Int64)((innerValue-1)>>1);
+				random_max = (Int64)((innerValue - 1) >> 1);
 			}
 			for (int i = 0; i < loop_count; i++)
 			{
@@ -693,7 +662,21 @@ namespace ecc_20231118_curve448_toy
 		{
 			if (this >= modulus)
 			{
-				return this % modulus;
+				if (innerValue.GetBitLength() <= modulus.innerValue.GetBitLength() + 4)
+				{
+					// modulus が this に近いくらい大きいなら、引き算を繰り返した方がいい
+					var i = innerValue;
+					while (i >= modulus.innerValue)
+					{
+						i -= modulus.innerValue;
+					}
+					return new QNumberBigInteger(i);
+				}
+				else
+				{
+					return this % modulus;
+				}
+
 			}
 			else if (IsNegative())
 			{

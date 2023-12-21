@@ -303,25 +303,18 @@ namespace Tests
 			Assert.That((new QNumberBigInteger(1)).IsPrime, Is.False);
 			var q = new QNumberBigInteger(0);
 			Assert.That(q.IsPrime, Is.False);
-			Assert.That(q.PossibilityPrimeState, Is.EqualTo(QNumberBigInteger.PossibilityPrime.None));
 			q = new QNumberBigInteger(7);
 			Assert.That(q.IsPrime, Is.True);
-			Assert.That(q.PossibilityPrimeState, Is.EqualTo(QNumberBigInteger.PossibilityPrime.Prime));
 			q = new QNumberBigInteger(2047);
 			Assert.That(q.IsPrime, Is.False);
-			Assert.That(q.PossibilityPrimeState, Is.EqualTo(QNumberBigInteger.PossibilityPrime.Composite));
 			q = new QNumberBigInteger(3331);
 			Assert.That(q.IsPrime, Is.True);
-			Assert.That(q.PossibilityPrimeState, Is.EqualTo(QNumberBigInteger.PossibilityPrime.Prime));
 			q = new QNumberBigInteger(18446744073709551557);
 			Assert.That(q.IsPrime, Is.True);
-			Assert.That(q.PossibilityPrimeState, Is.EqualTo(QNumberBigInteger.PossibilityPrime.Prime));
 			q = new QNumberBigInteger(BigInteger.Parse("1543267864443420616877677640751301"));
 			Assert.That(q.IsPrime, Is.False);
-			Assert.That(q.PossibilityPrimeState, Is.EqualTo(QNumberBigInteger.PossibilityPrime.Composite));
 			q = new QNumberBigInteger(BigInteger.Parse("340282366920938463463374607431768211283"));
 			Assert.That(q.IsPrime, Is.True);
-			Assert.That(q.PossibilityPrimeState, Is.EqualTo(QNumberBigInteger.PossibilityPrime.Prime));
 		}
 
 		[TestCase(11, 43, 11)]
