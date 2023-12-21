@@ -296,25 +296,32 @@ namespace Tests
 			Assert.That((new QNumberBigInteger(-100)).Sign, Is.EqualTo(-1));
 
 		}
-		[Test]
-		public void TestPrime()
+		[TestCase(0UL)]
+		[TestCase(1UL)]
+		[TestCase(2047UL)]
+		public void TestPrimeFalse(UInt64 p1)
 		{
-			Assert.That((new QNumberBigInteger(0)).IsPrime, Is.False);
-			Assert.That((new QNumberBigInteger(1)).IsPrime, Is.False);
-			var q = new QNumberBigInteger(0);
-			Assert.That(q.IsPrime, Is.False);
-			q = new QNumberBigInteger(7);
-			Assert.That(q.IsPrime, Is.True);
-			q = new QNumberBigInteger(2047);
-			Assert.That(q.IsPrime, Is.False);
-			q = new QNumberBigInteger(3331);
-			Assert.That(q.IsPrime, Is.True);
-			q = new QNumberBigInteger(18446744073709551557);
-			Assert.That(q.IsPrime, Is.True);
-			q = new QNumberBigInteger(BigInteger.Parse("1543267864443420616877677640751301"));
-			Assert.That(q.IsPrime, Is.False);
-			q = new QNumberBigInteger(BigInteger.Parse("340282366920938463463374607431768211283"));
-			Assert.That(q.IsPrime, Is.True);
+			Assert.That(new QNumberBigInteger(p1).IsPrime, Is.False);
+		}
+		[TestCase(2UL)]
+		[TestCase(7UL)]
+		[TestCase(3331UL)]
+		[TestCase(18446744073709551557UL)]
+		public void TestPrimeTrue(UInt64 p1)
+		{
+			Assert.That(new QNumberBigInteger(p1).IsPrime, Is.True);
+		}
+
+		[TestCase("1543267864443420616877677640751301")]
+		public void TestPrimeFalseStr(string p1)
+		{
+			Assert.That(new QNumberBigInteger(BigInteger.Parse(p1)).IsPrime, Is.False);
+		}
+
+		[TestCase("340282366920938463463374607431768211283")]
+		public void TestPrimeTrueStr(string p1)
+		{
+			Assert.That(new QNumberBigInteger(BigInteger.Parse(p1)).IsPrime, Is.True);
 		}
 
 		[TestCase(11, 43, 11)]
@@ -327,8 +334,7 @@ namespace Tests
 		[TestCase(-100, 43, 29)]
 		public void TestMod(Int32 n, Int32 prime, Int32 expect)
 		{
-			var a = new QNumberBigInteger(n);
-			Assert.That(a.Mod(new QNumberBigInteger(prime)), Is.EqualTo(new QNumberBigInteger(expect)));
+			Assert.That(new QNumberBigInteger(n).Mod(new QNumberBigInteger(prime)), Is.EqualTo(new QNumberBigInteger(expect)));
 		}
 		[TestCase(11, 1, 43, 11)]
 		[TestCase(11, 2, 43, 35)]
