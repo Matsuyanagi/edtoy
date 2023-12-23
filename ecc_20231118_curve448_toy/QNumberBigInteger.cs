@@ -256,7 +256,12 @@ namespace ecc_20231118_curve448_toy
 
 		public static QNumberBigInteger TrailingZeroCount(QNumberBigInteger value)
 		{
-			throw new NotImplementedException();
+			return value.TrailingZeroCount();
+		}
+
+		public QNumberBigInteger TrailingZeroCount()
+		{
+			return BigInteger.TrailingZeroCount(innerValue);
 		}
 
 		public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider? provider, [MaybeNullWhen(false)] out QNumberBigInteger result)
@@ -771,6 +776,97 @@ namespace ecc_20231118_curve448_toy
 				return new QNumberBigInteger(innerValue).Mod(prime);
 			}
 			return new QNumberBigInteger(innerValue + b.innerValue).Mod(prime);
+		}
+
+		public readonly (QNumberBigInteger, QNumberBigInteger) SqrtPrime(QNumberBigInteger prime)
+		{
+			// √1 = 1,-1
+			if (this == 1)
+			{
+				return (1, prime - 1);
+			}
+			if (this == Zero)
+			{
+				return (0, 0);
+			}
+			if ((prime & 3) == 3)
+			{
+				// prime = 4n+3
+				var p1 = this.PowMod((prime + 3) / 4, prime);
+				return (p1, prime - p1);
+			}
+			else
+			{
+				// prime = 4n+1
+				if ((prime & 7) == 5)
+				{
+					// prime ≡ 5 mod 8
+					var x = PowMod((prime + 3) >> 3, prime);
+					var x2 = QNumberBigInteger.PowMod(x, 2, prime);
+					if (x2 == this)
+					{
+						return (x, prime - x);
+					}
+					else if (x2 == prime + (-this))
+					{
+						var y = QNumberBigInteger.PowMod(2, prime >> 2, prime).MulMod(x, prime);
+						return (y, prime - y);
+					}
+					else
+					{
+						throw new Exception();
+					}
+				}
+				else
+				{
+					// Tonelli–Shanks algorithm
+					// https://en.wikipedia.org/wiki/Tonelli%E2%80%93Shanks_algorithm
+					// p_1 : prime-1
+					// var p_1 = prime.AddMod(-1, prime);
+					var p_1 = prime - 1;
+					// trailing_zero : p_1 の 末尾0の数
+					var trailing_zero = p_1.TrailingZeroCount();
+					// q : prime - 1 の上位奇数
+					var q = p_1 >> (Int32)trailing_zero.innerValue;
+					// p_1_2 : (prime-1)/2
+					var p_1_2 = p_1 >> 1;
+					var no_sqrt = One;
+					// no_sqrt : prime における非平方剰余数 a^(p-1)/2 ≡ -1 ≡ prime-1
+					for (no_sqrt = new QNumberBigInteger(2); no_sqrt.PowMod(p_1_2, prime) == p_1; no_sqrt += 1) ;
+					// no_sqrt = 3;
+					var m = trailing_zero;
+					var c = no_sqrt.PowMod(q, prime);
+					var t = this.PowMod(q, prime);
+					var r = this.PowMod((q + 1) >> 1, prime);
+
+					while (t != 1)
+					{
+						var t_bak = t;
+						var c_bak = c;
+						var m_bak = m;
+						var j = 0;
+						for (int i = 0; i < m && t != One; i++)
+						{
+							t = t.MulMod(t, prime);
+							j += 1;
+						}
+						if (j >= m)
+						{
+							throw new OverflowException();
+						}
+						m = j;
+						var exp = m_bak - m;
+						c = c_bak.PowMod(BigInteger.ModPow(2, exp.innerValue, prime.innerValue), prime);
+						// var c_1 = c_bak.PowMod(BigInteger.ModPow(2, exp.innerValue - 1, prime.innerValue), prime);
+						// var c_1 = c_bak.PowMod(BigInteger.ModPow(2, Mod(exp.innerValue - 1,prime), prime.innerValue), prime);
+						var c_1 = c_bak.PowMod(BigInteger.ModPow(2, exp.innerValue == 0 ? prime.innerValue - 1 : exp.innerValue - 1, prime.innerValue), prime);
+
+						t = t_bak.MulMod(c, prime);
+						r = r.MulMod(c_1, prime);
+					}
+					return (r, prime - r);
+				}
+			}
 		}
 	}
 }

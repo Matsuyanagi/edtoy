@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿using System.Data;
+using System.Numerics;
+using System.Linq;
 using ecc_20231118_curve448_toy;
 
 namespace Tests
@@ -415,6 +417,73 @@ namespace Tests
 			var b = new QNumberBigInteger(_b);
 			Assert.That(a.MulMod(b, prime), Is.EqualTo(new QNumberBigInteger(result)));
 		}
+
+		[TestCase(41, 5UL)]
+		public void Sqrt(Int64 prime, UInt64 nn)
+		{
+			QNumberBigInteger n = new(nn);
+
+			var sqrt_pair = n.SqrtPrime(prime);
+			List<QNumberBigInteger> act = [sqrt_pair.Item1, sqrt_pair.Item2];
+			act.Sort();
+			List<KeyValuePair<QNumberBigInteger, List<QNumberBigInteger>>> actual = [new KeyValuePair<QNumberBigInteger, List<QNumberBigInteger>>( new QNumberBigInteger(5), act) ];
+			List<KeyValuePair<QNumberBigInteger, List<QNumberBigInteger>>> expect = [new( new QNumberBigInteger(5), [new QNumberBigInteger(13), new QNumberBigInteger(28)] ) ];
+			Assert.That(actual, Is.EqualTo(expect));
+		}
+
+		// 4n+1 トネリシャンクス
+		[TestCase(41)]
+		[TestCase(17)]
+		[TestCase(73)]
+		[TestCase(89)]
+		// [TestCase(23)]
+		// [TestCase(29)]
+		// [TestCase(37)]
+		// [TestCase(53)]
+		// [TestCase(43)]
+		// [TestCase(47)]
+		// [TestCase(59)]
+		public void Sqrt(Int64 prime)
+		{
+			// 平方根テーブルを作る
+			Dictionary<QNumberBigInteger, List<QNumberBigInteger>> sqrt_table = new();
+			for (int i = 1; i < prime; i++)
+			{
+				var i2 = new QNumberBigInteger(i).MulMod(i, prime);
+				if (!sqrt_table.ContainsKey(i2))
+				{
+					sqrt_table[i2] = new(2) { i };
+				}
+				else
+				{
+					sqrt_table[i2].Add(i);
+					sqrt_table[i2].Sort();
+				}
+			}
+			// リスト化
+			var sqrt_table_list = sqrt_table.Select(a => new KeyValuePair<QNumberBigInteger, List<QNumberBigInteger>>( a.Key, [.. a.Value.OrderBy(x => x)])).ToList().OrderBy(y => y.Key).ToList();
+
+			// 平方剰余判定
+			// 	a^(p-1)/2 == 1 なら平方剰余
+			Dictionary<QNumberBigInteger, List<QNumberBigInteger>> actual = new();
+			for (int i = 1; i < prime; i++)
+			{
+				var a = new QNumberBigInteger(i).PowMod(prime >> 1, prime);
+				if (a == 1)
+				{
+					var n = new QNumberBigInteger(i);
+					// 平方根を求める
+					var sqrt_pair = n.SqrtPrime(prime);
+					actual[n] = [sqrt_pair.Item1, sqrt_pair.Item2];
+					actual[n].Sort();
+				}
+			}
+			var actual_list = actual.Select(a => new KeyValuePair<QNumberBigInteger, List<QNumberBigInteger>>( a.Key, [.. a.Value.OrderBy(x => x)])).ToList().OrderBy(y => y.Key).ToList();
+
+			// 平方根テーブルと一致することを確認
+			Assert.That(actual_list, Is.EqualTo(sqrt_table_list));
+		}
+
 
 	}
 }
