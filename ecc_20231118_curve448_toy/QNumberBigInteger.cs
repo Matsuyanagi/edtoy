@@ -831,9 +831,8 @@ namespace ecc_20231118_curve448_toy
 					// p_1_2 : (prime-1)/2
 					var p_1_2 = p_1 >> 1;
 					var no_sqrt = One;
-					// no_sqrt : prime における非平方剰余数 a^(p-1)/2 ≡ -1 ≡ prime-1
-					for (no_sqrt = new QNumberBigInteger(2); no_sqrt.PowMod(p_1_2, prime) == p_1; no_sqrt += 1) ;
-					// no_sqrt = 3;
+					// no_sqrt : prime における非平方剰余数を探す。 a^(p-1)/2 ≡ -1 ≡ prime-1
+					for (no_sqrt = new QNumberBigInteger(2); no_sqrt.PowMod(p_1_2, prime) == One; no_sqrt += 1) ;
 					var m = trailing_zero;
 					var c = no_sqrt.PowMod(q, prime);
 					var t = this.PowMod(q, prime);

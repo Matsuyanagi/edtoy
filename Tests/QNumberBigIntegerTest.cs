@@ -338,6 +338,8 @@ namespace Tests
 		{
 			Assert.That(new QNumberBigInteger(n).Mod(new QNumberBigInteger(prime)), Is.EqualTo(new QNumberBigInteger(expect)));
 		}
+
+		[TestCase(2, 20, 41, 1)]
 		[TestCase(11, 1, 43, 11)]
 		[TestCase(11, 2, 43, 35)]
 		[TestCase(11, 42, 43, 1)]
@@ -433,19 +435,29 @@ namespace Tests
 
 		// 4n+1 トネリシャンクス
 		[TestCase(41)]
-		[TestCase(17)]
 		[TestCase(73)]
 		[TestCase(89)]
-		// [TestCase(23)]
-		// [TestCase(29)]
-		// [TestCase(37)]
-		// [TestCase(53)]
-		// [TestCase(43)]
-		// [TestCase(47)]
-		// [TestCase(59)]
+		// フェルマー素数
+		[TestCase(17)]
+		[TestCase(257)]
+		[TestCase(65537)]
+		
+		// 4n+1 ≡5 mod 8
+		[TestCase(29)]
+		[TestCase(37)]
+		[TestCase(53)]
+		[TestCase(3733)]
+		
+		// 4n+3
+		[TestCase(23)]
+		[TestCase(43)]
+		[TestCase(47)]
+		[TestCase(59)]
+		[TestCase(3947)]
 		public void Sqrt(Int64 prime)
 		{
 			// 平方根テーブルを作る
+			// r * r => a
 			Dictionary<QNumberBigInteger, List<QNumberBigInteger>> sqrt_table = new();
 			for (int i = 1; i < prime; i++)
 			{
@@ -465,6 +477,7 @@ namespace Tests
 
 			// 平方剰余判定
 			// 	a^(p-1)/2 == 1 なら平方剰余
+			// √a => ±r
 			Dictionary<QNumberBigInteger, List<QNumberBigInteger>> actual = new();
 			for (int i = 1; i < prime; i++)
 			{
