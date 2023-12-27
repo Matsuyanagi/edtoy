@@ -246,7 +246,12 @@ namespace ecc_20231118_curve448_toy
 
 		public static QNumberBigInteger Parse(string s, IFormatProvider? provider)
 		{
-			throw new NotImplementedException();
+			return new QNumberBigInteger(BigInteger.Parse(s, provider));
+		}
+
+		public static QNumberBigInteger Parse(string s)
+		{
+			return new QNumberBigInteger(BigInteger.Parse(s));
 		}
 
 		public static QNumberBigInteger PopCount(QNumberBigInteger value)

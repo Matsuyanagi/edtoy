@@ -8,10 +8,19 @@ namespace ecc_20231118_curve448_toy
 	{
 		static void Main(string[] args)
 		{
-			Parser.Default.ParseArguments<COPrime, COSmallPrime>(args)
-				.WithParsed<COPrime>(opt => { CreatePrimeNumber.Run(opt); })
-				.WithParsed<COSmallPrime>(opt => { SmallPrimes.Run(opt); })
-				.WithNotParsed(err => { });
+			try
+			{
+				Parser.Default.ParseArguments<COPrime, COSmallPrime, COCurveParamA, COCurveParamD>(args)
+					.WithParsed<COPrime>(CreatePrimeNumber.Run)
+					.WithParsed<COSmallPrime>(SmallPrimes.Run)
+					.WithParsed<COCurveParamA>(CreateCurveParam.CreateParamA)
+					.WithParsed<COCurveParamD>(CreateCurveParam.CreateParamD)
+					.WithNotParsed(err => { });
+			}
+			catch (Exception e)
+			{
+				Console.Error.WriteLine( $"Error : {e.Message}" );
+			}
 		}
 	}
 }
