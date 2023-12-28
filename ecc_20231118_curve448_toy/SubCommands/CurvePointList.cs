@@ -50,7 +50,7 @@ namespace ecc_20231118_curve448_toy.SubCommands
 			{
 				var x2 = x.MulMod(x, prime);
 				var inv_1_dx2 = QNumberBigInteger.One.AddMod(-param_d.MulMod(x2, prime), prime).Recipro(prime);
-				var y2 = QNumberBigInteger.One.AddMod(-x2, prime).MulMod(inv_1_dx2, prime);
+				var y2 = QNumberBigInteger.One.AddMod(-x2.MulMod(param_a, prime), prime).MulMod(inv_1_dx2, prime);
 				if (y2.IsSquare(prime) || y2 == QNumberBigInteger.Zero)
 				{
 					// y^2 が平方剰余なら解として (x, y 平方根) を順に返す。

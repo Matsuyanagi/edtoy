@@ -63,12 +63,13 @@ namespace ecc_20231118_curve448_toy.SubCommands
 
 		/// <summary>
 		/// エドワーズ曲線のパラメータ d 、非平方剰余となる n^(p-1)/2 ≠ 1 mod prime となる n を返す
+		/// 	0,1 をのぞく
 		/// </summary>
 		/// <param name="prime">素数</param>
 		/// <returns>非平方剰余 n</returns>
 		public static IEnumerable<QNumberBigInteger> EnumerateParamD(QNumberBigInteger prime)
 		{
-			return PrimeHalfExp(prime, false);
+			return PrimeHalfExp(prime, false).Where(x => x != 0 && x != 1);
 		}
 
 		/// <summary>
