@@ -86,6 +86,26 @@ namespace ecc_20231118_curve448_toy
 			innerValue = new BigInteger(b);
 		}
 
+		public static explicit operator ulong (QNumberBigInteger value)
+		{
+			return (ulong)value.innerValue;
+		}
+
+		public static explicit operator long (QNumberBigInteger value)
+		{
+			return (long)value.innerValue;
+		}
+
+		public static explicit operator uint (QNumberBigInteger value)
+		{
+			return (uint)value.innerValue;
+		}
+
+		public static explicit operator int (QNumberBigInteger value)
+		{
+			return (int)value.innerValue;
+		}
+
 		public static int Radix => throw new NotImplementedException();
 
 		public static QNumberBigInteger AdditiveIdentity => new(Zero);
@@ -872,5 +892,16 @@ namespace ecc_20231118_curve448_toy
 				}
 			}
 		}
+
+		/// <summary>
+		/// 平方剰余判定
+		/// </summary>
+		/// <param name="prime">素数</param>
+		/// <returns>素数なら true</returns>
+		public bool IsSquare(QNumberBigInteger prime)
+		{
+			return PowMod(prime >> 1, prime) == One;
+		}
+
 	}
 }
