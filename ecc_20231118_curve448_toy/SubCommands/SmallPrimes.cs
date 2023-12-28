@@ -11,48 +11,42 @@ namespace ecc_20231118_curve448_toy.SubCommands
 {
 	public static class SmallPrimes
 	{
-		private static readonly List<Int32> small_prime_256 = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251];
+		private static readonly List<Int32> small_prime_256 = [3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251];
 		// 65536 までの素数を列挙する
 		public static List<Int32> SmallPrimeNumberList()
 		{
-			// 素数リスト
-			List<Int32> prime_numbers = new(7000);
+			// 素数リスト。2 だけ入れておく
+			List<Int32> prime_numbers = new(7000) { 2 };
 			// エラトステネスの篩バッファ。合成数にフラグを立てる。0で初期化する。
-			List<UInt64> eratosthenes_buffer = new(65536 / 64);
+			const int ERATOSTHENES_BUFFER_SIZE = 65536 / 2 / 64;        // 奇数に対応するビットだけ
+			List<UInt64> eratosthenes_buffer = new(ERATOSTHENES_BUFFER_SIZE);
 			for (int i = 0; i < eratosthenes_buffer.Capacity; i++)
 			{
 				eratosthenes_buffer.Add(0UL);
 			}
 
 			// small_prime_256 の 256 までの素数でエラトステネスの篩バッファに合成数フラグを立てる
+			//	偶数ビットを省略して、奇数ビットだけ(eratosthenes_buffer バッファはその半分)
+			const int bit_mask = (1 << 6) - 1;
 			foreach (var prime in small_prime_256)
 			{
-				int p = prime;
-				bool first = true;
-				while (p < 65536)
+				int pbitpos = (prime >> 1) + prime;   // 初期ビット位置。(prime >> 1) は素数の位置、(+prime)は最初の合成数の位置
+				while (pbitpos < ERATOSTHENES_BUFFER_SIZE * sizeof(UInt64) * 8)
 				{
-					if (first)
-					{
-						// 素数の初回は素数としてスキップ
-						first = false;
-					}
-					else
-					{
-						// 素数の倍数は合成数フラグを立てる
-						// 	eratosthenes_buffer Int64 64bit のどの要素のどのビットにあたるかを求める
-						int array_index = p >> 6;
-						int bit_offset = p & ((1 << 6) - 1);
-						// 合成数フラグを立てる
-						eratosthenes_buffer[array_index] |= 1UL << bit_offset;
-					}
-					p += prime;
+					// 素数の倍数は合成数フラグを立てる
+					// 	eratosthenes_buffer Int64 64bit のどの要素のどのビットにあたるかを求める
+					int array_index = pbitpos >> 6;
+					int bit_offset = pbitpos & bit_mask;
+					// 合成数フラグを立てる
+					eratosthenes_buffer[array_index] |= 1UL << bit_offset;
+					pbitpos += prime;
 				}
 			}
-			// 0,1 は素数として数えて欲しくないので合成数フラグを立てる
-			eratosthenes_buffer[0] |= 3UL;
+			// 1 は素数として数えて欲しくないので合成数フラグを立てる
+			eratosthenes_buffer[0] |= 1UL;
 
 			// 合成数フラグを反転させて、素数フラグとして利用する。
-			int offset = 0;
+			int offset = 1; // 奇数としての末尾 1 をすでに足しておく
 			foreach (var e in eratosthenes_buffer)
 			{
 				var pe = ~e;
@@ -60,10 +54,10 @@ namespace ecc_20231118_curve448_toy.SubCommands
 				{
 					// 配列全体のビット番号から素数として prime_numbers へ格納する
 					var bn = BitOperations.TrailingZeroCount(pe);
-					prime_numbers.Add(bn + offset);
+					prime_numbers.Add(bn * 2 + offset);
 					pe &= ~(1UL << bn);
 				}
-				offset += 64;
+				offset += 128;
 			}
 
 			return prime_numbers;
