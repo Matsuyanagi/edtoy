@@ -86,22 +86,22 @@ namespace ecc_20231118_curve448_toy
 			innerValue = new BigInteger(b);
 		}
 
-		public static explicit operator ulong (QNumberBigInteger value)
+		public static explicit operator ulong(QNumberBigInteger value)
 		{
 			return (ulong)value.innerValue;
 		}
 
-		public static explicit operator long (QNumberBigInteger value)
+		public static explicit operator long(QNumberBigInteger value)
 		{
 			return (long)value.innerValue;
 		}
 
-		public static explicit operator uint (QNumberBigInteger value)
+		public static explicit operator uint(QNumberBigInteger value)
 		{
 			return (uint)value.innerValue;
 		}
 
-		public static explicit operator int (QNumberBigInteger value)
+		public static explicit operator int(QNumberBigInteger value)
 		{
 			return (int)value.innerValue;
 		}

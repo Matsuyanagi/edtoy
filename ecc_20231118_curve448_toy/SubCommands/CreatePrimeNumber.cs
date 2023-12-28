@@ -101,7 +101,7 @@ namespace ecc_20231118_curve448_toy.SubCommands
 		public static QNumberBigInteger CreateFakePrimeRandomBitNextPlus4(COPrime option, Random random, byte[] bytes, QNumberBigInteger prime_number)
 		{
 			prime_number += 4;
-			if ((prime_number & (1 << (option.Length-1))) == 0)
+			if ((prime_number & (1 << (option.Length - 1))) == 0)
 			{
 				// 繰り上がりがあったら乱数で生成し直し
 				prime_number = CreateFakePrimeRandomBit(option, random, bytes);

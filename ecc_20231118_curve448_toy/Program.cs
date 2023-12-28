@@ -20,7 +20,7 @@ namespace ecc_20231118_curve448_toy
 			}
 			catch (Exception e)
 			{
-				Console.Error.WriteLine( $"Error : {e.Message}" );
+				Console.Error.WriteLine($"Error : {e.Message}");
 			}
 		}
 	}

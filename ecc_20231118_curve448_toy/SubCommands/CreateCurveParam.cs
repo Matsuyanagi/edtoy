@@ -23,7 +23,6 @@ namespace ecc_20231118_curve448_toy.SubCommands
 			{
 				throw new ArgumentException($"{prime} is not prime number.");
 			}
-			// (QNumberBigInteger number, bool random) = NormalizeMaxNumber(option.Number, option.Random, prime);
 
 			foreach (var item in EnumerateParamA(prime).Take(option.Number))
 			{
@@ -43,7 +42,6 @@ namespace ecc_20231118_curve448_toy.SubCommands
 			{
 				throw new ArgumentException($"{prime} is not prime number.");
 			}
-			// (QNumberBigInteger number, bool random) = NormalizeMaxNumber(option.Number, option.Random, option.PrimeNumber);
 
 			foreach (var item in EnumerateParamD(prime).Take(option.Number))
 			{

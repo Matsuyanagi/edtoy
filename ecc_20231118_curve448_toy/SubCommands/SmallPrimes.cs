@@ -45,7 +45,7 @@ namespace ecc_20231118_curve448_toy.SubCommands
 
 			// 最初の素数 2
 			yield return 2;
-			
+
 			// 合成数フラグを反転させて、素数フラグとして利用する。
 			int offset = 1; // 奇数としての末尾 1 をすでに足しておく
 			foreach (var e in eratosthenes_buffer)

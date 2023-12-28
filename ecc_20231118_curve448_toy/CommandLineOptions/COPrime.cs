@@ -7,7 +7,7 @@ using CommandLine;
 
 namespace ecc_20231118_curve448_toy.CommandLineOptions
 {
-	[Verb("prime",HelpText ="Create prime numbers.")]
+	[Verb("prime", HelpText = "Create prime numbers.")]
 	public class COPrime
 	{
 		[Option('l', "length", Required = true, Default = 32, HelpText = "Bit Length(>10)")]
