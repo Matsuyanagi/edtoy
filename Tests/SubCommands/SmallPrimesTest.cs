@@ -82,7 +82,7 @@ namespace Tests.SubCommands
 		[Test]
 		public void TestSmallPrimes()
 		{
-			Assert.That(ecc_20231118_curve448_toy.SubCommands.SmallPrimes.SmallPrimeNumberList(), Is.EqualTo(small_prime_65536));
+			Assert.That(ecc_20231118_curve448_toy.SubCommands.SmallPrimes.SmallPrimeNumberList().ToList(), Is.EqualTo(small_prime_65536));
 		}
 	}
 }

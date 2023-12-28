@@ -13,10 +13,8 @@ namespace ecc_20231118_curve448_toy.SubCommands
 	{
 		private static readonly List<Int32> small_prime_256 = [3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251];
 		// 65536 までの素数を列挙する
-		public static List<Int32> SmallPrimeNumberList()
+		public static IEnumerable<Int32> SmallPrimeNumberList()
 		{
-			// 素数リスト。2 だけ入れておく
-			List<Int32> prime_numbers = new(7000) { 2 };
 			// エラトステネスの篩バッファ。合成数にフラグを立てる。0で初期化する。
 			const int ERATOSTHENES_BUFFER_SIZE = 65536 / 2 / 64;        // 奇数に対応するビットだけ
 			List<UInt64> eratosthenes_buffer = new(ERATOSTHENES_BUFFER_SIZE);
@@ -45,6 +43,9 @@ namespace ecc_20231118_curve448_toy.SubCommands
 			// 1 は素数として数えて欲しくないので合成数フラグを立てる
 			eratosthenes_buffer[0] |= 1UL;
 
+			// 最初の素数 2
+			yield return 2;
+			
 			// 合成数フラグを反転させて、素数フラグとして利用する。
 			int offset = 1; // 奇数としての末尾 1 をすでに足しておく
 			foreach (var e in eratosthenes_buffer)
@@ -54,19 +55,17 @@ namespace ecc_20231118_curve448_toy.SubCommands
 				{
 					// 配列全体のビット番号から素数として prime_numbers へ格納する
 					var bn = BitOperations.TrailingZeroCount(pe);
-					prime_numbers.Add(bn * 2 + offset);
+					yield return bn * 2 + offset;
 					pe &= ~(1UL << bn);
 				}
 				offset += 128;
 			}
-
-			return prime_numbers;
 		}
 
 		public static void Run(COSmallPrime option)
 		{
 			// 素数リスト作成
-			var prime_number_list = SmallPrimeNumberList();
+			var prime_number_list = SmallPrimeNumberList().ToList();
 			var start_index = 0;
 			var end_index = prime_number_list.Count;
 			if (option.Length > 0)
