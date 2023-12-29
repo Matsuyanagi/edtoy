@@ -1,9 +1,10 @@
-﻿using ecc_20231118_curve448_toy;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ecc_20231118_curve448_toy;
+using ecc_20231118_curve448_toy.EdwardsCurveComponents;
 
 namespace Tests.SubCommands
 {
@@ -82,7 +83,7 @@ namespace Tests.SubCommands
 		[Test]
 		public void TestSmallPrimes()
 		{
-			Assert.That(ecc_20231118_curve448_toy.SubCommands.SmallPrimes.SmallPrimeNumberList().ToList(), Is.EqualTo(small_prime_65536));
+			Assert.That(SmallPrimeNumber.SmallPrimeNumberList().ToList(), Is.EqualTo(small_prime_65536));
 		}
 	}
 }

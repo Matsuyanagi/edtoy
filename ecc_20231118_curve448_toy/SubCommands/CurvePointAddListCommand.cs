@@ -9,7 +9,7 @@ using ecc_20231118_curve448_toy.EdwardsCurveComponents;
 
 namespace ecc_20231118_curve448_toy.SubCommands
 {
-    public static class CurvePointAddList
+    public static class CurvePointAddListCommand
 	{
 		public static void Run(COCurvePointAddList option)
 		{
@@ -40,6 +40,5 @@ namespace ecc_20231118_curve448_toy.SubCommands
 				}
 			}
 		}
-
 	}
 }
