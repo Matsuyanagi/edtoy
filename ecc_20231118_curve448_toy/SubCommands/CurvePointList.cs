@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ecc_20231118_curve448_toy.CommandLineOptions;
+using ecc_20231118_curve448_toy.EdwardsCurveComponents;
 using ecc_20231118_curve448_toy.Utils;
 
 namespace ecc_20231118_curve448_toy.SubCommands
 {
-	public static class CurvePointList
+    public static class CurvePointList
 	{
 		public static void Run(COCurvePointList option)
 		{

@@ -1,10 +1,12 @@
-﻿namespace ecc_20231118_curve448_toy
+﻿using ecc_20231118_curve448_toy.EdwardsCurveComponents;
+
+namespace ecc_20231118_curve448_toy
 {
-	/// <summary>
-	/// Extended Homogeneous Coordinates Point
-	/// 拡張同次座標 (X;Y;Z)
-	/// </summary>
-	public readonly struct EHPoint3(QNumberBigInteger x, QNumberBigInteger y, QNumberBigInteger z) : IEquatable<EHPoint3>
+    /// <summary>
+    /// Extended Homogeneous Coordinates Point
+    /// 拡張同次座標 (X;Y;Z)
+    /// </summary>
+    public readonly struct EHPoint3(QNumberBigInteger x, QNumberBigInteger y, QNumberBigInteger z) : IEquatable<EHPoint3>
 	{
 		public QNumberBigInteger X { get; } = x;
 		public QNumberBigInteger Y { get; } = y;

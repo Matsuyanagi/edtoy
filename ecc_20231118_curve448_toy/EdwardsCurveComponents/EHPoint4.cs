@@ -1,6 +1,8 @@
-﻿namespace ecc_20231118_curve448_toy
+﻿using ecc_20231118_curve448_toy.EdwardsCurveComponents;
+
+namespace ecc_20231118_curve448_toy
 {
-	public readonly struct EHPoint4(QNumberBigInteger x, QNumberBigInteger y, QNumberBigInteger z, QNumberBigInteger t, QNumberBigInteger prime) : IEquatable<EHPoint4>
+    public readonly struct EHPoint4(QNumberBigInteger x, QNumberBigInteger y, QNumberBigInteger z, QNumberBigInteger t, QNumberBigInteger prime) : IEquatable<EHPoint4>
 	{
 		public QNumberBigInteger X { get; } = x;
 		public QNumberBigInteger Y { get; } = y;

@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using ecc_20231118_curve448_toy.CommandLineOptions;
 using ecc_20231118_curve448_toy.Utils;
-using ecc_20231118_curve448_toy.SubCommands;
+using ecc_20231118_curve448_toy.EdwardsCurveComponents;
 
 namespace ecc_20231118_curve448_toy.SubCommands
 {
-	public static class CurvePointAddList
+    public static class CurvePointAddList
 	{
 		public static void Run(COCurvePointAddList option)
 		{
