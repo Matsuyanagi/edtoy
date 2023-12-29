@@ -24,9 +24,16 @@ namespace ecc_20231118_curve448_toy.SubCommands
 				throw new ArgumentException($"{prime} is not prime number.");
 			}
 
-			foreach (var item in EnumerateParamA(prime).Take(option.Number))
+			if (option.OutputComma)
 			{
-				Console.WriteLine(item);
+				Console.WriteLine(String.Join(',', EnumerateParamA(prime).Take(option.Number)));
+			}
+			else
+			{
+				foreach (var item in EnumerateParamA(prime).Take(option.Number))
+				{
+					Console.WriteLine(item);
+				}
 			}
 		}
 
@@ -43,9 +50,16 @@ namespace ecc_20231118_curve448_toy.SubCommands
 				throw new ArgumentException($"{prime} is not prime number.");
 			}
 
-			foreach (var item in EnumerateParamD(prime).Take(option.Number))
+			if (option.OutputComma)
 			{
-				Console.WriteLine(item);
+				Console.WriteLine(String.Join(',', EnumerateParamD(prime).Take(option.Number)));
+			}
+			else
+			{
+				foreach (var item in EnumerateParamD(prime).Take(option.Number))
+				{
+					Console.WriteLine(item);
+				}
 			}
 		}
 

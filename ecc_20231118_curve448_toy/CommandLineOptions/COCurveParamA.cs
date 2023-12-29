@@ -17,5 +17,7 @@ namespace ecc_20231118_curve448_toy.CommandLineOptions
 		[Option('n', "number", Required = false, Default = 100, HelpText = "Max number of list.")]
 		public int Number { get; set; }
 
+		[Option('c', "comma", Required = false, Default = false, HelpText = "One line separated by commas.")]
+		public bool OutputComma { get; set; }
 	}
 }
