@@ -388,6 +388,11 @@ namespace ecc_20231118_curve448_toy
 			throw new NotImplementedException();
 		}
 
+		public long GetBitLength()
+		{
+			return innerValue.GetBitLength();
+		}
+
 		public override readonly string? ToString()
 		{
 			return innerValue.ToString();
@@ -903,5 +908,13 @@ namespace ecc_20231118_curve448_toy
 			return PowMod(prime >> 1, prime) == One;
 		}
 
+		public static QNumberBigInteger Min(QNumberBigInteger left, QNumberBigInteger right)
+		{
+			return left < right ? left : right;
+		}
+		public static QNumberBigInteger Max(QNumberBigInteger left, QNumberBigInteger right)
+		{
+			return left > right ? left : right;
+		}
 	}
 }
