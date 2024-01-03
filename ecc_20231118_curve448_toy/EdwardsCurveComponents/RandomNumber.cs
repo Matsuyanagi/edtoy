@@ -11,7 +11,7 @@ namespace ecc_20231118_curve448_toy.EdwardsCurveComponents
 		static readonly Random randomgen = new();
 
 		/// <summary>
-		/// lower_number ～ upper_number の間の乱数を生成する。両端を含む。小さい数なら
+		/// lower_number ～ upper_number の間の乱数を生成する。両端を含む。
 		/// </summary>
 		/// <param name="lower_number">下限</param>
 		/// <param name="upper_number">上限</param>

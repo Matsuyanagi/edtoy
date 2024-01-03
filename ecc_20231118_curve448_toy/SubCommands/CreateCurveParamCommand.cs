@@ -27,11 +27,11 @@ namespace ecc_20231118_curve448_toy.SubCommands
 
 			if (option.OutputComma)
 			{
-				Console.WriteLine(String.Join(',', CurveParams.EnumerateParamA(prime).Take(option.Number)));
+				Console.WriteLine(String.Join(',', CurveParams.EnumerateParamA(prime, option.Random).Take(option.Number)));
 			}
 			else
 			{
-				foreach (var item in CurveParams.EnumerateParamA(prime).Take(option.Number))
+				foreach (var item in CurveParams.EnumerateParamA(prime, option.Random).Take(option.Number))
 				{
 					Console.WriteLine(item);
 				}
@@ -53,11 +53,11 @@ namespace ecc_20231118_curve448_toy.SubCommands
 
 			if (option.OutputComma)
 			{
-				Console.WriteLine(String.Join(',', CurveParams.EnumerateParamD(prime).Take(option.Number)));
+				Console.WriteLine(String.Join(',', CurveParams.EnumerateParamD(prime, option.Random).Take(option.Number)));
 			}
 			else
 			{
-				foreach (var item in CurveParams.EnumerateParamD(prime).Take(option.Number))
+				foreach (var item in CurveParams.EnumerateParamD(prime, option.Random).Take(option.Number))
 				{
 					Console.WriteLine(item);
 				}

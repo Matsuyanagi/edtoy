@@ -13,9 +13,9 @@ namespace ecc_20231118_curve448_toy.EdwardsCurveComponents
 		/// </summary>
 		/// <param name="prime">素数</param>
 		/// <returns>平方剰余 n</returns>
-		public static IEnumerable<QNumberBigInteger> EnumerateParamA(QNumberBigInteger prime)
+		public static IEnumerable<QNumberBigInteger> EnumerateParamA(QNumberBigInteger prime, bool is_random)
 		{
-			return PrimeHalfExp(prime, true);
+			return PrimeHalfExp(prime, is_random, true);
 		}
 
 		/// <summary>
@@ -24,9 +24,9 @@ namespace ecc_20231118_curve448_toy.EdwardsCurveComponents
 		/// </summary>
 		/// <param name="prime">素数</param>
 		/// <returns>非平方剰余 n</returns>
-		public static IEnumerable<QNumberBigInteger> EnumerateParamD(QNumberBigInteger prime)
+		public static IEnumerable<QNumberBigInteger> EnumerateParamD(QNumberBigInteger prime, bool is_random)
 		{
-			return PrimeHalfExp(prime, false).Where(x => x != 0 && x != 1);
+			return PrimeHalfExp(prime, is_random, false).Where(x => x != 0 && x != 1);
 		}
 
 		/// <summary>
@@ -58,15 +58,31 @@ namespace ecc_20231118_curve448_toy.EdwardsCurveComponents
 		/// <param name="prime">素数</param>
 		/// <param name="is_one">true:n^(p-1)/2=1, false:..=-1</param>
 		/// <returns>n (1 <= n <= p-1)</returns>
-		public static IEnumerable<QNumberBigInteger> PrimeHalfExp(QNumberBigInteger prime, bool is_one)
+		public static IEnumerable<QNumberBigInteger> PrimeHalfExp(QNumberBigInteger prime, bool is_random, bool is_one)
 		{
 			QNumberBigInteger p_1_2 = prime >> 1;
-			for (QNumberBigInteger i = 1; i < prime; i += 1)
+			if (is_random)
 			{
-				var ans = i.PowMod(p_1_2, prime);
-				if ((is_one && ans == 1) || (!is_one && ans != 1))
+				QNumberBigInteger p_1 = prime - QNumberBigInteger.One;
+				for (QNumberBigInteger i = 1; i < prime; i += 1)
 				{
-					yield return i;
+					var r = RandomNumber.GenerateRandomNumber(1, p_1);
+					var ans = r.PowMod(p_1_2, prime);
+					if ((is_one && ans == 1) || (!is_one && ans != 1))
+					{
+						yield return r;
+					}
+				}
+			}
+			else
+			{
+				for (QNumberBigInteger i = 1; i < prime; i += 1)
+				{
+					var ans = i.PowMod(p_1_2, prime);
+					if ((is_one && ans == 1) || (!is_one && ans != 1))
+					{
+						yield return i;
+					}
 				}
 			}
 		}
