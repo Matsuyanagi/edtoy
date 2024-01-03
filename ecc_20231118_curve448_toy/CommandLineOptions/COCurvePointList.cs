@@ -26,5 +26,7 @@ namespace ecc_20231118_curve448_toy.CommandLineOptions
 
 		[Option('n', "number", Required = false, Default = 100, HelpText = "Max number of list.")]
 		public int Number { get; set; }
+		[Option('r', "random", Required = false, Default = false, HelpText = "Random curvepoint.")]
+		public bool Random { get; set; }
 	}
 }

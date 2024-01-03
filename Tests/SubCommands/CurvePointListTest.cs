@@ -18,7 +18,7 @@ namespace Tests.SubCommands
 		[TestCase(47, 4, 5, 10, "(0,1),(0,46),(1,6),(1,41),(2,13),(2,34),(3,2),(3,45),(4,20),(4,27)")]
 		public void TestEdwardsCurvePointList(int prime, int param_a, int param_d, int number, string result_str)
 		{
-			Assert.That(String.Join(',', CurvePointList.EdwardsCurvePointList(prime, param_a, param_d).Take(number).ToList()), Is.EqualTo(result_str));
+			Assert.That(String.Join(',', CurvePointList.EdwardsCurvePointList(prime, param_a, param_d, false).Take(number).ToList()), Is.EqualTo(result_str));
 		}
 
 	}

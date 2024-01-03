@@ -17,7 +17,7 @@ namespace ecc_20231118_curve448_toy.SubCommands
 			QNumberBigInteger param_a = option.ParamA;
 			QNumberBigInteger param_d = option.ParamD;
 			int number = Util.BalanceNumberLimit(option.Number, prime);
-			var list = CurvePointList.EdwardsCurvePointList(prime, param_a, param_d).Take(number).ToList();
+			var list = CurvePointList.EdwardsCurvePointList(prime, param_a, param_d, option.Random).Take(number).ToList();
 			foreach (var item in list)
 			{
 				Console.WriteLine($"({item.X},{item.Y})");

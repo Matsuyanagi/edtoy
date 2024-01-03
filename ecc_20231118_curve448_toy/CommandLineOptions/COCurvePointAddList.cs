@@ -28,5 +28,8 @@ namespace ecc_20231118_curve448_toy.CommandLineOptions
 		[Option('l', "length", Required = false, Default = 100, HelpText = "Max length of adding list.")]
 		public int Length { get; set; }
 
+		[Option('r', "random", Required = false, Default = false, HelpText = "Random curvepoint.")]
+		public bool Random { get; set; }
+
 	}
 }
