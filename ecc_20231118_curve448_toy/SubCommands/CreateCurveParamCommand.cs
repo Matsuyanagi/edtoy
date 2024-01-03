@@ -20,10 +20,6 @@ namespace ecc_20231118_curve448_toy.SubCommands
 		public static void CreateParamA(COCurveParamA option)
 		{
 			var prime = new QNumberBigInteger(option.PrimeNumber);
-			if (!prime.IsPrime)
-			{
-				throw new ArgumentException($"{prime} is not prime number.");
-			}
 
 			if (option.OutputComma)
 			{
@@ -46,10 +42,6 @@ namespace ecc_20231118_curve448_toy.SubCommands
 		public static void CreateParamD(COCurveParamD option)
 		{
 			var prime = new QNumberBigInteger(option.PrimeNumber);
-			if (!prime.IsPrime)
-			{
-				throw new ArgumentException($"{prime} is not prime number.");
-			}
 
 			if (option.OutputComma)
 			{

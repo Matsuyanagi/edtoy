@@ -11,7 +11,18 @@ namespace ecc_20231118_curve448_toy.CommandLineOptions
 	public class COCurveParamD
 	{
 		[Option('p', "prime", Required = true, HelpText = "Prime Number.")]
-		public string PrimeNumberStr { set { PrimeNumber = QNumberBigInteger.Parse(value); } }
+		public string PrimeNumberStr
+		{
+			set
+			{
+				QNumberBigInteger p = QNumberBigInteger.Parse(value);
+				if (!p.IsPrime)
+				{
+					throw new ArgumentException($"{p} is not prime number.");
+				}
+				PrimeNumber = p;
+			}
+		}
 		public QNumberBigInteger PrimeNumber { get; set; }
 
 		[Option('n', "number", Required = false, Default = 100, HelpText = "Max number of list.")]
