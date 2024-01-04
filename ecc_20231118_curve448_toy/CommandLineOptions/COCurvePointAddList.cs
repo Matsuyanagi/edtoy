@@ -33,7 +33,7 @@ namespace ecc_20231118_curve448_toy.CommandLineOptions
 		public string ParamDStr { set { ParamD = QNumberBigInteger.Parse(value); } }
 		public QNumberBigInteger ParamD { get; set; }
 
-		[Option('n', "number", Required = false, Default = 100, HelpText = "Max number of list.")]
+		[Option('n', "number", Required = false, Default = 100, HelpText = "Max number of points.")]
 		public int Number { get; set; }
 
 		[Option('l', "length", Required = false, Default = 100, HelpText = "Max length of adding list.")]
@@ -41,6 +41,14 @@ namespace ecc_20231118_curve448_toy.CommandLineOptions
 
 		[Option('r', "random", Required = false, Default = false, HelpText = "Random curvepoint.")]
 		public bool Random { get; set; }
+
+		[Option('x', "xpos", Required = false, Default = null, HelpText = "Specify curve point x-pos.")]
+		public string XPosStr { set { XPos = QNumberBigInteger.Parse(value); } }
+		public QNumberBigInteger? XPos { get; set; }
+
+		[Option('y', "ypos", Required = false, Default = null, HelpText = "Specify curve point y-pos. Require -x xpos.")]
+		public string YPosStr { set { YPos = QNumberBigInteger.Parse(value); } }
+		public QNumberBigInteger? YPos { get; set; }
 
 	}
 }
