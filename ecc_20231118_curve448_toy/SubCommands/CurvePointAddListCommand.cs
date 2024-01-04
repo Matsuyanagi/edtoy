@@ -20,26 +20,31 @@ namespace ecc_20231118_curve448_toy.SubCommands
 
 			if (option.XPos != null)
 			{
+				// コマンドライン引数 -x で XPos 値が渡された
 				if (option.YPos != null)
 				{
+					// コマンドライン引数 -y で YPos 値が渡された
+
 					// (XPos,YPos) が曲線上の点かを確認する
 					var x = option.XPos.Value;
-					// var x2 = x.MulMod(x, prime);
-					// var inv_1_dx2 = QNumberBigInteger.One.AddMod(-param_d.MulMod(x2, prime), prime).Recipro(prime);
-					// var y2 = QNumberBigInteger.One.AddMod(-x2.MulMod(param_a, prime), prime).MulMod(inv_1_dx2, prime);
+					// x から求めた y^2
 					var y2 = CurvePointList.CalcY2FromX(prime, param_a, param_d, x);
 
+					// コマンドラインから渡された y'
 					var y = option.YPos.Value;
 					if (y2 == y.MulMod(y, prime))
 					{
+						// x から求めた曲線上の y^2 と コマンドラインから渡された y'^2 が等しい。コマンドラインから渡された y' は曲線上にある。
 						var point = new AFPoint(x, y);
 						PrintAFPoints(point, prime, param_a, param_d, option.Length);
 					}
 				}
 				else
 				{
-					// 指定された XPos に対応する YPos を求める。求まった YPos 平方剰余でなければ曲線上に点は存在しない。
-					// 点が存在しないかもしれない
+					// コマンドライン引数で XPos 値のみが渡された。
+
+					// 指定された XPos に対応する YPos を求める。求まった YPos は平方剰余でなければ曲線上に点は存在しない。
+					// 対応する YPos 点が存在しないかもしれない
 					var curve_points = CurvePointList.CalcEdwardsCurvePointFromX(prime, param_a, param_d, false, (QNumberBigInteger)option.XPos);
 					foreach (var point in curve_points)
 					{
@@ -56,6 +61,7 @@ namespace ecc_20231118_curve448_toy.SubCommands
 				}
 			}
 		}
+
 		/// <summary>
 		/// 指定された point 点をベースポイントとして加算した点を出力する
 		/// </summary>

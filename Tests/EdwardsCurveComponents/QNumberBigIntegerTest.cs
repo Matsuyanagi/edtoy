@@ -175,6 +175,9 @@ namespace Tests.EdwardsCurveComponents
         [TestCase(100, -1, 0)]
         [TestCase(100, -3, 1)]
         [TestCase(-100, 3, -1)]
+        [TestCase(-11, 11, 0)]
+        [TestCase(-22, 11, 0)]
+        [TestCase(-23, 11, -1)]
         public void TestSimpleArithmeticMod(int a, int b, int expect)
         {
             // % 剰余算
@@ -321,6 +324,8 @@ namespace Tests.EdwardsCurveComponents
         }
 
         [TestCase("340282366920938463463374607431768211283")]
+        [TestCase("858935034755082243869059388705676768166562323327641661754278919905577283660233")]
+        [TestCase("5032016309736605849599781362686227253782565233212531305818219076405603316773042020583754171682703873312704063336646392378679894476934469388536106036540387070237902240020722375527146453726028527740762821861729991833037775711364117033973976166975847399328585662507374639262965786968502687693249972814313")]
         public void TestPrimeTrueStr(string p1)
         {
             Assert.That(new QNumberBigInteger(BigInteger.Parse(p1)).IsPrime, Is.True);
@@ -334,6 +339,9 @@ namespace Tests.EdwardsCurveComponents
         [TestCase(-43, 43, 0)]
         [TestCase(-44, 43, 42)]
         [TestCase(-100, 43, 29)]
+        [TestCase(-11, 11, 0)]
+        [TestCase(-22, 11, 0)]
+        [TestCase(-23, 11, 10)]
         public void TestMod(int n, int prime, int expect)
         {
             Assert.That(new QNumberBigInteger(n).Mod(new QNumberBigInteger(prime)), Is.EqualTo(new QNumberBigInteger(expect)));
@@ -347,7 +355,6 @@ namespace Tests.EdwardsCurveComponents
         [TestCase(11, 44, 43, 35)]
         [TestCase(11, 90, 43, 4)]
         [TestCase(11, 130, 43, 21)]
-
         [TestCase(11, -1, 43, 4)]
         [TestCase(11, -2, 43, 16)]
         [TestCase(11, -3, 43, 21)]

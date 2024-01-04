@@ -140,7 +140,7 @@ namespace ecc_20231118_curve448_toy
 		public bool IsEven => innerValue.IsEven;
 		public bool IsOne => innerValue.IsOne;
 		public bool IsPowerOfTwo => innerValue.IsPowerOfTwo;
-		// public bool IsZero => innerValue.IsZero;
+		public bool IsZero => innerValue.IsZero;
 		public int Sign => innerValue.Sign;
 
 
@@ -219,9 +219,9 @@ namespace ecc_20231118_curve448_toy
 			throw new NotImplementedException();
 		}
 
-		public static bool IsZero(QNumberBigInteger value)
+		static bool INumberBase<QNumberBigInteger>.IsZero(QNumberBigInteger value)
 		{
-			return value.innerValue.IsZero;
+			throw new NotImplementedException();
 		}
 
 		public static QNumberBigInteger Log2(QNumberBigInteger value)
@@ -590,7 +590,6 @@ namespace ecc_20231118_curve448_toy
 				(23,3825123056546413051),
 				(29,3825123056546413051),
 				(31,3825123056546413051),
-				(31,3825123056546413051),
 				(37,3825123056546413051),
 				(41,3825123056546413051),
 				(43,3825123056546413051),
@@ -627,14 +626,14 @@ namespace ecc_20231118_curve448_toy
 			// 繰返し回数 : 間違う確率が 4^-k だとして、ビット長の 1/2 回以上繰り返す
 			var bit_length = innerValue.GetBitLength();
 			var loop_count = (bit_length >> 1) + 5;
-			Int64 random_max = 0x0fff_ffff_ffff_ffff + 41L;
-			if ((BigInteger)random_max > (innerValue - 1) >> 1)
+			Int64 random_max = 0x7fff_ffff_ffff_ff00 + 72L;
+			if ((BigInteger)random_max > innerValue >> 1)
 			{
-				random_max = (Int64)((innerValue - 1) >> 1);
+				random_max = (Int64)(innerValue >> 1);
 			}
 			for (int i = 0; i < loop_count; i++)
 			{
-				UInt64 random = (UInt64)randomgen.NextInt64(41L, random_max);
+				UInt64 random = (UInt64)randomgen.NextInt64(72L, random_max);
 
 				if (IsPrimeInnerMillerRabinInnerImplement(random, d) == PossibilityPrime.Composite)
 				{
@@ -722,7 +721,7 @@ namespace ecc_20231118_curve448_toy
 				}
 				else
 				{
-					return modulus - abs % modulus;
+					return (modulus - abs.Mod(modulus)).Mod(modulus);
 				}
 			}
 			return this;
@@ -736,21 +735,26 @@ namespace ecc_20231118_curve448_toy
 		/// <returns>self^exp % modulus</returns>
 		public readonly QNumberBigInteger PowMod(QNumberBigInteger exp, QNumberBigInteger modulus)
 		{
-			if (exp == Zero)
+			if (exp.IsZero)
 			{
 				return One;
+			}
+			if (exp.IsOne)
+			{
+				return Mod(modulus);
 			}
 			QNumberBigInteger e = exp.Mod(modulus - One);
 			return new QNumberBigInteger(BigInteger.ModPow(innerValue, e.innerValue, modulus.innerValue));
 		}
-
 
 		/// <summary>
 		/// 暗黙の変換
 		/// </summary>
 		/// <param name="a"></param>
 		public static implicit operator QNumberBigInteger(Int32 a) => new(a);
+		public static implicit operator QNumberBigInteger(UInt32 a) => new(a);
 		public static implicit operator QNumberBigInteger(Int64 a) => new(a);
+		public static implicit operator QNumberBigInteger(UInt64 a) => new(a);
 		public static implicit operator QNumberBigInteger(BigInteger a) => new(a);
 
 
@@ -788,11 +792,11 @@ namespace ecc_20231118_curve448_toy
 		/// <returns></returns>
 		public readonly QNumberBigInteger MulMod(QNumberBigInteger multiplier, QNumberBigInteger prime)
 		{
-			if (multiplier == One)
+			if (multiplier.IsOne)
 			{
 				return new QNumberBigInteger(innerValue).Mod(prime);
 			}
-			if (multiplier == Zero)
+			if (multiplier.IsZero)
 			{
 				return Zero;
 			}
@@ -801,7 +805,7 @@ namespace ecc_20231118_curve448_toy
 
 		public readonly QNumberBigInteger AddMod(QNumberBigInteger b, QNumberBigInteger prime)
 		{
-			if (b == Zero)
+			if (b.IsZero)
 			{
 				return new QNumberBigInteger(innerValue).Mod(prime);
 			}
@@ -811,18 +815,18 @@ namespace ecc_20231118_curve448_toy
 		public readonly (QNumberBigInteger, QNumberBigInteger) SqrtPrime(QNumberBigInteger prime)
 		{
 			// √1 = 1,-1
-			if (this == 1)
+			if (IsOne)
 			{
 				return (1, prime - 1);
 			}
-			if (this == Zero)
+			if (IsZero)
 			{
 				return (0, 0);
 			}
 			if ((prime & 3) == 3)
 			{
 				// prime = 4n+3
-				var p1 = this.PowMod((prime + 3) / 4, prime);
+				var p1 = PowMod((prime + 3) / 4, prime);
 				return (p1, prime - p1);
 			}
 			else
@@ -832,19 +836,19 @@ namespace ecc_20231118_curve448_toy
 				{
 					// prime ≡ 5 mod 8
 					var x = PowMod((prime + 3) >> 3, prime);
-					var x2 = QNumberBigInteger.PowMod(x, 2, prime);
+					var x2 = PowMod(x, 2, prime);
 					if (x2 == this)
 					{
 						return (x, prime - x);
 					}
 					else if (x2 == prime + (-this))
 					{
-						var y = QNumberBigInteger.PowMod(2, prime >> 2, prime).MulMod(x, prime);
+						var y = PowMod(2, prime >> 2, prime).MulMod(x, prime);
 						return (y, prime - y);
 					}
 					else
 					{
-						throw new Exception();
+						throw new ArithmeticException($"{prime} is not square.");
 					}
 				}
 				else
@@ -852,7 +856,6 @@ namespace ecc_20231118_curve448_toy
 					// Tonelli–Shanks algorithm
 					// https://en.wikipedia.org/wiki/Tonelli%E2%80%93Shanks_algorithm
 					// p_1 : prime-1
-					// var p_1 = prime.AddMod(-1, prime);
 					var p_1 = prime - 1;
 					// trailing_zero : p_1 の 末尾0の数
 					var trailing_zero = p_1.TrailingZeroCount();
@@ -865,8 +868,8 @@ namespace ecc_20231118_curve448_toy
 					for (no_sqrt = new QNumberBigInteger(2); no_sqrt.PowMod(p_1_2, prime) == One; no_sqrt += 1) ;
 					var m = trailing_zero;
 					var c = no_sqrt.PowMod(q, prime);
-					var t = this.PowMod(q, prime);
-					var r = this.PowMod((q + 1) >> 1, prime);
+					var t = PowMod(q, prime);
+					var r = PowMod((q + 1) >> 1, prime);
 
 					while (t != 1)
 					{
@@ -886,8 +889,6 @@ namespace ecc_20231118_curve448_toy
 						m = j;
 						var exp = m_bak - m;
 						c = c_bak.PowMod(BigInteger.ModPow(2, exp.innerValue, prime.innerValue), prime);
-						// var c_1 = c_bak.PowMod(BigInteger.ModPow(2, exp.innerValue - 1, prime.innerValue), prime);
-						// var c_1 = c_bak.PowMod(BigInteger.ModPow(2, Mod(exp.innerValue - 1,prime), prime.innerValue), prime);
 						var c_1 = c_bak.PowMod(BigInteger.ModPow(2, exp.innerValue == 0 ? prime.innerValue - 1 : exp.innerValue - 1, prime.innerValue), prime);
 
 						t = t_bak.MulMod(c, prime);
@@ -900,9 +901,10 @@ namespace ecc_20231118_curve448_toy
 
 		/// <summary>
 		/// 平方剰余判定
+		/// x^(p-1)/2 ≡ 1 (mod p) なら平方剰余
 		/// </summary>
 		/// <param name="prime">素数</param>
-		/// <returns>素数なら true</returns>
+		/// <returns>平方剰余なら true</returns>
 		public bool IsSquare(QNumberBigInteger prime)
 		{
 			return PowMod(prime >> 1, prime) == One;

@@ -43,10 +43,10 @@ namespace ecc_20231118_curve448_toy.EdwardsCurveComponents
 		{
 			List<AFPoint> result = [];
 			var y2 = CalcY2FromX(prime, param_a, param_d, x);
-			if (y2.IsSquare(prime) || y2 == QNumberBigInteger.Zero)
+			if (y2.IsSquare(prime) || y2.IsZero)
 			{
 				// y^2 が平方剰余なら解として (x, y 平方根) を順に返す。
-				if (y2 == QNumberBigInteger.Zero)
+				if (y2.IsZero)
 				{
 					// y^2 = 0 なら y=0 の重根なので1つだけ出力
 					result.Add(new AFPoint(x, QNumberBigInteger.Zero));
