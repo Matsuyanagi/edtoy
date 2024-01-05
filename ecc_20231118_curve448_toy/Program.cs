@@ -10,7 +10,7 @@ namespace ecc_20231118_curve448_toy
 		{
 			try
 			{
-				Parser.Default.ParseArguments<COPrime, COSmallPrime, COCurveParamA, COCurveParamD, COCurvePointList, COCurvePointAddList, CORandomNumber>(args)
+				Parser.Default.ParseArguments<COPrime, COSmallPrime, COCurveParamA, COCurveParamD, COCurvePointList, COCurvePointAddList, CORandomNumber, COCalc>(args)
 					.WithParsed<COPrime>(CreatePrimeNumberCommand.Run)
 					.WithParsed<COSmallPrime>(SmallPrimesCommand.Run)
 					.WithParsed<COCurveParamA>(CreateCurveParamCommand.CreateParamA)
@@ -18,6 +18,7 @@ namespace ecc_20231118_curve448_toy
 					.WithParsed<COCurvePointList>(CurvePointListCommand.Run)
 					.WithParsed<COCurvePointAddList>(CurvePointAddListCommand.Run)
 					.WithParsed<CORandomNumber>(RandomNumberCommand.Run)
+					.WithParsed<COCalc>(CalcCommand.Run)
 					.WithNotParsed(err => { });
 			}
 			catch (Exception e)
