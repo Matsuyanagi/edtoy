@@ -1,4 +1,4 @@
-root=true
+# root=false
 
 [*.cs]
 dotnet_diagnostic.IDE0049.severity = none

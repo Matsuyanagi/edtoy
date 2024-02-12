@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "ecc_20231118_curve448_toy": {
-      "commandName": "Project",
-      "commandLineArgs": "curvepoint -p 41 -a 1 -d 3"
-    }
-  }
-}

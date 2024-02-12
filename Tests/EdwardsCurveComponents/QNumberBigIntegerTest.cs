@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using System.Numerics;
 using System.Linq;
-using ecc_20231118_curve448_toy;
+using edtoy;
 
 namespace Tests.EdwardsCurveComponents
 {

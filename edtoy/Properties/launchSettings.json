@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "edtoy": {
+      "commandName": "Project",
+      "commandLineArgs": "curvepoint -p 41 -a 1 -d 3"
+    }
+  }
+}

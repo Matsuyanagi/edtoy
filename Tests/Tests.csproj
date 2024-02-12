@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ecc_20231118_curve448_toy\ecc_20231118_curve448_toy.csproj" />
+    <ProjectReference Include="..\edtoy\edtoy.csproj" />
   </ItemGroup>
 
 </Project>

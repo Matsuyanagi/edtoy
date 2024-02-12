@@ -1,5 +1,5 @@
-﻿using ecc_20231118_curve448_toy;
-using ecc_20231118_curve448_toy.EdwardsCurveComponents;
+﻿using edtoy;
+using edtoy.EdwardsCurveComponents;
 
 namespace Tests.EdwardsCurveComponents
 {

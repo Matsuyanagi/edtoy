@@ -1,11 +1,11 @@
-﻿using ecc_20231118_curve448_toy;
+﻿using edtoy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ecc_20231118_curve448_toy.SubCommands;
-using ecc_20231118_curve448_toy.EdwardsCurveComponents;
+using edtoy.SubCommands;
+using edtoy.EdwardsCurveComponents;
 
 namespace Tests.SubCommands
 {
